@@ -1,0 +1,222 @@
+dyn.load("mylib2.so")
+#' approximate negtive log-likelihood for bi-factor
+#'@description approximate negtive loglikielihood for bi-factor copula model with
+#'all linking copulas Frank
+#'@param udata input data in the u-scale. N*D
+#'@param th parameters in the bi-factor model, vector of 2*D length(if all the
+#'linking copulas are one-parameters copula)
+#'@param vlat proxies of the latent
+#'@param grsize group size in the model
+#'@return nllk negative log-likelihood
+#'@export
+f90bifctFrkProxynllk=function(udata,th,vlat,grsize){
+	n=nrow(udata)
+	npar=length(th)
+	mgrp=length(grsize)
+	dvar=sum(grsize)
+	#if(!is.loaded("frkproxynllk"))  dyn.load("./libs/FactorModels.so")
+	out=.Fortran("frkproxynllk",
+							 as.integer(npar),as.double(th),as.integer(mgrp),as.integer(n),as.integer(dvar),
+							 as.integer(grsize),as.double(udata),as.double(vlat),
+							 nllk=as.double(0.),grad=as.double(0.),hess=as.duoble(0.))
+	out$nllk
+}
+
+
+
+
+
+
+
+
+
+
+#' approximate negative log-likelihood for bi-factor
+#'@description approximate negtive loglikielihood for bi-factor copula model with
+#'all linking copulas Gumbel
+#'@param udata input data in the u-scale. N*D
+#'@param th parameters in the bi-factor model, vector of 2*D length(if all the
+#'linking copulas are one-parameters copula)
+#'@param vlat proxies of the latent variables in the model
+#'@param grsize group size in the model
+#'@return nllk negative log-likelihood
+#'@export
+#'
+f90bifctGumbelProxynllk=function(udata,th,vlat,grsize){
+	n=nrow(udata)
+	npar=length(th)
+	mgrp=length(grsize)
+	dvar=sum(grsize)
+	#if(!is.loaded("gumproxynllk"))  dyn.load("./libs/FactorModels.so")
+	out=.Fortran("gumproxybifct",
+							 as.integer(npar),as.double(th),as.integer(mgrp),as.integer(n),as.integer(dvar),
+							 as.integer(grsize),as.double(udata),as.double(vlat),
+							 nllk=as.double(0.),grad=as.double(0.),hess=as.double(0.))
+	out$nllk
+}
+
+
+
+
+
+
+
+#' compute new proxies for bi-factor copula models
+#'@description latent update for the bi-factor copulas with all linking
+#'copulas Frank
+#'@param udata input data in u-scale N*D
+#'@param th parameters for linking copulas in the model
+#'@param grsize group size in the bi-factor model
+#'@param nq number of Gaussian points
+#'@param xl Gaussian-Legendre points
+#'@param wl Gaussian-Legendre weights
+#'@return v0: proxies of the global latent variable
+#'@return vg: proxies of the local latent variables
+#'@export
+latUpdateBifctFrk=function(udata,th,grsize,nq,xl,wl){
+	n=nrow(udata)
+	npar=length(th)
+	mgrp=length(grsize)
+	dvar=sum(grsize)
+	nq=length(xl)
+	npar=2*dvar
+	#if(!is.loaded("latupdatebifact"))  dyn.load("./libs/FactorModels.so")
+	out=.Fortran("latupdatebifact",
+							 as.integer(npar),as.double(th),as.integer(mgrp),as.integer(dvar),as.integer(n),
+							 as.integer(grsize),as.double(udata),as.integer(nq),as.double(xl),as.double(wl),
+							 v0mat=rep(0,n),
+							 vgmat=matrix(0.0,nrow=n,ncol=mgrp))
+
+	return(list(v0=out$v0mat,vg=out$vgmat))
+}
+
+
+
+
+
+
+#'compute new proxies for bi-factor copula models
+#'@description latent update for the bi-factor copulas with all linking
+#'copulas Gumbel
+#'@param udata input data in u-scale N*D
+#'@param th parameters for linking copulas in the model
+#'@param grsize group size in the bi-factor model
+#'@param nq number of  Gaussian-Legendre points
+#'@param xl  Gaussian-Legendre points
+#'@param wl  Gaussian-Legendre weights
+#'@return v0: proxies of the global latent variable
+#'@return vg: proxies of the local latent variables
+#'
+#'@export
+#'
+latUpdateBifctGumbel=function(udata,th,grsize,nq,xl,wl){
+	n=nrow(udata)
+	npar=length(th)
+	mgrp=length(grsize)
+	dvar=sum(grsize)
+	nq=length(xl)
+	npar=2*dvar
+	#if(!is.loaded("latupdatebifact2"))  dyn.load("./libs/FactorModels.so")
+	out=.Fortran("latupdatebifact2",
+							 as.integer(npar),as.double(th),as.integer(mgrp),as.integer(dvar),as.integer(n),
+							 as.integer(grsize),as.double(udata),as.integer(nq),as.double(xl),as.double(wl),
+							 v0mat=rep(0,n),
+							 vgmat=matrix(0.0,nrow=n,ncol=mgrp))
+
+	return(list(v0=out$v0mat,vg=out$vgmat))
+}
+
+
+
+
+
+
+
+
+
+
+#'parameter estimation in bi-factor copula model using proxy method
+#'@description parameter estimation using mean version of proxies in
+#'bi-factor copula model
+#'@param udata N*D data in u-scale
+#'@param grsize group size in the model
+#'@param start starting values for paramters
+#'@param LB upper bound for parameters, length d
+#'@param UB lower bound for parameters, length d
+#'@param xl  Gaussian-Legendre points
+#'@param wl  Gaussian-Legendre weights
+#'@param iprint print the gradient and hessian if T
+#'@return mlpx1 estimated parameters from mean-proxy method
+#'        mlpx2 estimated parameters from new proxy method
+#'        proxyMean mean verison of proxies
+#'        proxyNew  new proposed proxies
+#'        condNum condition number for apa matrix
+#'@export
+proxyBifact<-function(udata,grsize,start,xl,wl,LB,UB,iprint){
+	n=nrow(udata)
+	d=ncol(udata)
+  mgrp=length(grsize)
+	#compute regression factor scores
+	d=sum(grsize)
+  dvar=2*d
+	param_optim=mvtbifact(tdata=nscore(udata),
+												start=start,grsize=grsize,
+												df=201,prlevel=0,full=T)$estimate
+  param_optim=matrix(param_optim,d,mgrp+1)
+	d1=grsize[1]
+	mgrp=length(grsize)
+	pcest=matrix(0,d,mgrp+1)
+	pcest[,1]=param_optim[,1]
+	gp=c(0,cumsum(grsize))
+	for(j in 1:mgrp){
+		jj=c((gp[j]+1):gp[j+1])
+		pcest[jj,j+1]=param_optim[jj,2]
+	}
+	loadest=pcor2load(pcest)
+	psi=diag(1-apply(loadest^2,1,sum))
+	apa=t(loadest)%*%solve(psi)%*%loadest
+
+
+	values=eigen(apa)$values
+	cond=max(values)/min(values)
+	cat("condition number of apa matrix\n")
+	print(cond)
+
+	pc=c(pcest)[c(pcest)!=0]
+	reg_scores=factor.scores(x=nscore(udata),
+												f=loadest,
+												method="Thurstone")$scores #regression
+
+	start=BiCopTau2Par(family=4, BiCopPar2Tau(family=1,par=pc))
+
+  #exact approach
+	dstrgum=list(data=udata,copname="gumbel",quad=gl,
+							 repar=0,grsize=grsize,pdf=0)
+	mlex1=pdhessminb(param=start,f90str2nllk,
+									 ifixed=rep(FALSE,dvar),
+									 dstrgum,
+									 LB=LB, UB=UB,
+									 mxiter=30, eps=5.e-5,iprint=TRUE)$parmin
+
+
+	fs=uscore(reg_scores)
+	mlpx1=nlm(f90bifctGumbelProxynllk,p=start,
+						grsize,udata=udata,
+						vlat=fs,
+						print.level=0)$estimate
+  #update the factor scores
+	proxyNew=latUpdateBifctGumbel(udata=udata,
+																th=mlpx1,grsize,
+																nq=25,xl,wl)
+
+
+	mlpx2=nlm(f90bifctGumbelProxynllk,p=mlpx1,
+					grsize,udata=udata,
+					vlat=cbind(proxyNew$v0,proxyNew$vg),
+					print.level=0)$estimate
+
+	return(list(mlex1=mlex1,mlpx1=mlpx1,mlpx2=mlpx2,
+							proxyMean=fs,proxyNew=proxyNew,
+							condNum=cond))
+}
+

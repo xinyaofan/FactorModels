@@ -1,0 +1,71 @@
+[
+    {
+        "file": "/Users/xinyaofan/FactorModels/src/ptbeta.c",
+        "file_last_write": 1619337674.0,
+        "definitions": [
+            {
+                "usr": "c:@F@pbetab",
+                "kind": 6,
+                "parent_name": "",
+                "name": "pbetab(double, double, double, double)",
+                "file": "/Users/xinyaofan/FactorModels/src/ptbeta.c",
+                "line": 58,
+                "column": 8
+            },
+            {
+                "usr": "c:ptbeta.c@F@incbcf",
+                "kind": 6,
+                "parent_name": "",
+                "name": "incbcf(double, double, double)",
+                "file": "/Users/xinyaofan/FactorModels/src/ptbeta.c",
+                "line": 122,
+                "column": 15
+            },
+            {
+                "usr": "c:ptbeta.c@F@incbd",
+                "kind": 6,
+                "parent_name": "",
+                "name": "incbd(double, double, double)",
+                "file": "/Users/xinyaofan/FactorModels/src/ptbeta.c",
+                "line": 177,
+                "column": 15
+            },
+            {
+                "usr": "c:ptbeta.c@F@pseries",
+                "kind": 6,
+                "parent_name": "",
+                "name": "pseries(double, double, double, double)",
+                "file": "/Users/xinyaofan/FactorModels/src/ptbeta.c",
+                "line": 236,
+                "column": 15
+            },
+            {
+                "usr": "c:@F@lbeta",
+                "kind": 6,
+                "parent_name": "",
+                "name": "lbeta(double, double)",
+                "file": "/Users/xinyaofan/FactorModels/src/ptbeta.c",
+                "line": 265,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@pbeta",
+                "kind": 6,
+                "parent_name": "",
+                "name": "pbeta(double, double, double)",
+                "file": "/Users/xinyaofan/FactorModels/src/ptbeta.c",
+                "line": 268,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@pt_",
+                "kind": 6,
+                "parent_name": "",
+                "name": "pt_(double *, double *)",
+                "file": "/Users/xinyaofan/FactorModels/src/ptbeta.c",
+                "line": 271,
+                "column": 8
+            }
+        ]
+    }
+]

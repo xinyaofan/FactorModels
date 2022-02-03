@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1643926846467.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1957328119",
+    "id" : "B7EB35D5",
+    "lastKnownWriteTime" : 1643926865,
+    "last_content_update" : 1643926865414,
+    "path" : "~/2021fall/proxy_project/FactorModels/R/onefactweak.R",
+    "project_path" : "R/onefactweak.R",
+    "properties" : {
+        "cursorPosition" : "101,2",
+        "scrollLine" : "110"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

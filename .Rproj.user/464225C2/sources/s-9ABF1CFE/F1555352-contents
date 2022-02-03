@@ -1,0 +1,177 @@
+#simulation studies for oblique factor copula model
+library(FactorModels)
+library(VineCopula)
+library(CopulaModel)
+#'nsize simulation size
+#'n sample size
+#'d data dimension
+#'thlow lower bound for theta
+#'thupp upper bound for theta
+
+gl=gausslegendre(25)
+xl=gl$nodes
+wl=gl$weights
+
+
+simuOblique<-function(nsize,d1,mgrp,n,seed=1234){
+	set.seed(seed)
+	#result=matrix(NA,nsize,22)
+	grsize=rep(d1,mgrp)
+	thlow=1.4
+	thupp=3.33
+	thloww=3
+	thuppp=6
+	d=sum(grsize)
+	npar=mgrp+d
+	udata_list=list()
+	res_list=list()
+	lat_list=list()
+	lat0_list=list()
+	thv1Mat=matrix(NA,nsize,mgrp)
+	thv2Mat=matrix(NA,nsize,d)
+	for(k in 1:nsize){
+		par1=runif(mgrp,thloww,thuppp)
+		par2=runif(d,thlow,thupp)
+		parne=c(par1,par2)
+		data=simnestfact2(nn=n,grsize=grsize,cop1=5,cop2=3,
+											param=parne)
+		lat0_list[[k]]=data$lat0
+		lat_list[[k]]=data$lat
+		thv=parne #true parameters
+		#exact approach
+		# dstruct=list(data=data$zdata,copname="frkgum",quad=gl,repar=0,grsize=grsize)
+		# tryCatch({
+		# 	outn= pdhessminb(param=c(rep(4,mgrp),rep(2,d)),
+		# 									 f90str1nllk,
+		# 									 ifixed=rep(FALSE,npar),dstruct,
+		# 									 LB=rep(1,npar), UB=rep(20,npar),
+		# 									 mxiter=50, eps=5.e-5,iprint=F)
+		#     mlex1<-outn$parmin
+		# },error=function(e){
+		# 	mlex1<-rep(NA,npar)}
+		# )
+		udata=data$zdata
+    udata_list[[k]]=udata
+	tryCatch({
+	#starting point
+		gp=c(0,cumsum(grsize))
+		proxyMean=matrix(NA,n,mgrp)
+		for(j in 1:mgrp){
+			jj=c((gp[j]+1):gp[j+1])
+			proxyMean[,j]=uscore(apply(udata[,jj],1,mean))
+		}
+		tau=rep(NA,d)
+		summ=c(0,cumsum(grsize))
+		for(j in 1:mgrp){
+			jj=c((gp[j]+1):gp[j+1])
+			for(s in jj) tau[s]=cor(x=udata[,s],y=proxyMean[,j],
+															method="kendall")
+		}
+		param0=gum.tau2cpar(tau)
+		param=c(rep(4,mgrp),param0) #starting point
+	  #param=c(rep(5,mgrp),rep(2,d))
+		out2=proxyOblique(udata=udata,grsize=grsize,fam=4,
+											start=param,LB=rep(1,npar),
+											UB=rep(15,npar),
+											xl=xl,wl=wl)
+
+		proxyMean=out2$proxyMean
+		proxyNew=out2$proxyNew
+		mlpx2=out2$mlpx1
+		mlpx3=out2$mlpx2
+		},error=function(e){
+			cat("error! change starting point")
+		  mlpx2=rep(NA,npar)
+		  mlpx3=rep(NA,npar)
+			})
+
+		 vlat=data$lat
+		# mae=c(mean(abs(proxyMean-vlat)),
+		# 			mean(abs(proxyNew-vlat)),
+		# 			mean(abs(proxyMean-proxyNew)))
+		# rmse=c((mean((proxyMean-vlat)^2)),
+		# 			 (mean((proxyNew-vlat)^2)),
+		# 			 (mean((proxyNew-proxyMean)^2)))
+
+		#mlex11=mlex1[1:mgrp]
+# 		mlpx21=mlpx2[1:mgrp]
+# 		mlpx31=mlpx3[1:mgrp]
+# 		#mlex12=mlex1[(mgrp+1):npar]
+# 		mlpx22=mlpx2[(mgrp+1):npar]
+# 		mlpx32=mlpx3[(mgrp+1):npar]
+		thv1=thv[1:mgrp]
+		thv2=thv[(mgrp+1):npar]
+    thv1Mat[k,]=thv1
+    thv2Mat[k,]=thv2
+# 
+		res=list("v1"=proxyMean,"v2"=proxyNew,
+						 "dif1"=proxyMean-vlat,"dif2"=proxyNew-vlat,
+						 #"theta1"=mlex1,
+						 "theta2"=mlpx2,"theta3"=mlpx3)
+# 						 "mse1_1"=(mean((mlex11-thv1)^2)),
+# 						 "mse2_1"=(mean((mlpx21-thv1)^2)),
+# 						 "mse3_1"=(mean((mlpx31-thv1)^2)),
+# 						 "mse1"=(mean((mlex12-thv2)^2)),
+# 						 "mse2"=(mean((mlpx22-thv2)^2)),
+# 						 "mse3"=(mean((mlpx32-thv2)^2)),
+# 						 "mae1_1"=mean(abs(mlex11-thv1)),
+# 						 "mae2_1"=mean(abs(mlpx21-thv1)),
+# 						 "mae3_1"=mean(abs(mlpx31-thv1)),
+# 						 "mae1"=mean(abs(mlex12-thv2)),
+# 						 "mae2"=mean(abs(mlpx22-thv2)),
+# 						 "mae3"=mean(abs(mlpx32-thv2)),
+# 						 "mae_proxy"=mae,"rmse_proxy"=rmse,
+# 						 "dif_para_1"=mean(abs(mlpx21-mlex11)),
+# 						 "dif_para2_1"=mean(abs(mlpx31-mlex11)),
+# 						 #"dif_para3_1"=mean(abs(mlpx31-mlpx21)),
+# 						 "dif_para"=mean(abs(mlpx22-mlex12)),
+# 						 "dif_para2"=mean(abs(mlpx32-mlex12))
+# 						 #"dif_para3_2"=mean(abs(mlpx32-mlpx22))
+# 						 )
+ 		res_list[[k]]=res
+# 		result[k,]=c(res$mse1_1,res$mse2_1,res$mse3_1,
+# 								 res$mse1,res$mse2,res$mse3,
+# 								 res$mae1_1,res$mae2_1,res$mae3_1,
+# 								 res$mae1,res$mae2,res$mae3,
+# 								 res$mae_proxy, res$mse_proxy,
+# 								 res$dif_para_1,res$dif_para2_1,
+# 								 res$dif_para,res$dif_para2)
+# 		print(k)
+# 	}
+# 	colnames(result)=c("rmse11","rmse21","rmse31",
+# 										 "rmse1","rmse2","rmse3",
+# 										 "mae1_1","mae2_1","mae3_1",
+# 										 "mae1","mae2","mae3",
+# 										 "mae_proxy1","mae_proxy2","mae_proxy12",
+# 										 "rmse_proxy1","rmse_proxy2","rmse_proxy12",
+# 										 "dif_para_1","dif_para2_1",
+# 										 "dif_para","dif_para2")
+	}
+		return(list(res_list=res_list,
+								lat0_list=lat0_list,
+								lat_list=lat_list,
+								udata_list=udata_list,
+								thv1=thv1Mat,thv2=thv2Mat))
+	# return(list(result=result,res=res_list,lat_list=lat_list,
+	# 						lat0_list=lat0_list,thv1=thv1Mat,thv2=thv2Mat))
+
+}
+
+
+
+
+res10=simuOblique(nsize=1000,d1=10,mgrp=3,n=1000)
+
+save(file="oblique10.RData",res10)
+
+res20=simuOblique(nsize=1000,d1=20,mgrp=3,n=1000)
+save(file="oblique20.RData",res20)
+
+res30=simuOblique(nsize=1000,d1=30,mgrp=3,n=1000)
+save(file="oblique30.RData",res30)
+
+res40=simuOblique(nsize=2,d1=40,mgrp=3,n=1000)
+save(file="oblique40_2.RData",res40)
+
+# test40=simuOblique(nsize=2,d1=40,mgrp=3,n=1000)
+# save(file="test40.RData",test40)

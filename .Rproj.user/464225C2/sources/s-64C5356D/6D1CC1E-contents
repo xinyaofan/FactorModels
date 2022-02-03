@@ -1,0 +1,334 @@
+#this file is for simulation in section 2:
+#1-factor copula model with different copula families
+library(FactorModels)
+library(VineCopula)
+library(CopulaModel)
+#'nsize simulation size
+#'n sample size
+#'d data dimension
+#'thlow lower bound for theta
+#'thupp upper bound for theta
+
+gl=gausslegendre(25)
+xl=gl$nodes
+wl=gl$weights
+
+#find a good starting point for optimization procedure
+find_start<-function(fam,tau,df){
+	d=length(fam)
+
+	st=rep(0,2*d)
+	for(i in 1:d){
+		if(fam[i]==4){
+			st[2*i-1]=gum.tau2cpar(tau=tau[i])
+		}else if(fam[i]==5){
+			st[2*i-1]=BiCopTau2Par(family=5,tau=tau[i])
+		}else if(fam[i]==2){
+			st[2*i-1]=BiCopTau2Par(family=2,tau=tau[i])
+			st[2*i]=df
+		}else if(fam[i]==17){
+			st[c(2*i-1,2*i)]=bb1.tau2eqlm(tau[i])[c(1,2)]
+		}else if(fam[i]==7){
+			st[c(2*i-1,2*i)]=bb1.tau2eqlm(tau[i])[c(1,2)]
+		}else if(fam[i]==10|fam[i]==20)
+		{
+			st[c(2*i-1,2*i)]=c(4.5,0.5)
+		}
+		#print(i)
+	}
+	return(st)
+}
+
+
+#return the optimization upper and lower bound for
+#the parameters
+return_bound<-function(familyvec){
+	n=length(familyvec)
+	UB1=rep(NA,n)
+	LB1=rep(NA,n)
+	UB2=rep(NA,n)
+	LB2=rep(NA,n)
+	for(i in 1:n){
+		tem=familyvec[i]
+		if(tem==2){
+			LB1[i]=-0.99
+			UB1[i]=0.99
+			LB2[i]=2.01
+			UB2[i]=5000
+		} else if (tem==17|tem==7) {
+			LB1[i]=0
+			UB1[i]=7
+			LB2[i]=1
+			UB2[i]=7
+		} else if (tem==40){
+			LB1[i]=-8
+			UB1[i]=-1
+			LB2[i]=-1
+			UB2[i]=-1e-4
+		} else if (tem==1) {
+			LB1[i]=-0.99
+			UB1[i]=0.99
+			LB2[i]=0
+			UB2[i]=0
+		} else if (tem==5){
+			LB1[i]=-99.99
+			UB1[i]=99.99
+			LB2[i]=0
+			UB2[i]=0
+		} else if(tem==20){
+			UB1[i]=8
+			UB2[i]=1
+			LB1[i]=1
+			LB2[i]=0.00001
+		} else if(tem==10){
+			UB1[i]=8
+			LB1[i]=1
+			UB2[i]=1
+			LB2[i]=0.00001
+		} else if(tem==14){
+			UB1[i]=100
+			LB1[i]=1
+			UB2[i]=0
+			LB2[i]=0
+		}else if(tem==4){
+			UB1[i]=50
+			LB1[i]=1
+			UB2[i]=0
+			LB2[i]=0
+		}
+	}
+	return(list(UB1=UB1,UB2=UB2,LB1=LB1,LB2=LB2))
+}
+
+simu1<-function(nsize,n,d,seed=1234){
+		set.seed(seed)
+
+	 	res_list=list()
+		vlat_list=list()
+	 	thv_mat=matrix(NA,nsize,2*d)
+	 	fam_mat=matrix(NA,nsize,d)
+	 	proxyMean_list=list()
+	 	mlpx1_mat=matrix(NA,nsize,2*d)
+	 	mlpx2_mat=matrix(NA,nsize,2*d)
+	 	udata_list=list()
+	 	LB_list=list()
+	 	UB_list=list()
+	 	ifixed_list=list()
+	 	start_list=list()
+	 	for(k in 1:nsize){
+		 		param=c(rbind(c(runif(d/3,1.67,5),runif(d/3,4.2,21.5),
+											runif(d/3,0.59,0.95)),
+											c(rep(0,2*d/3),c(rep(5,d/3)))))
+				thv_mat[k,]=param
+
+			 	fam=c(rep(4,d/3),rep(5,d/3),rep(2,d/3))
+			 	data=sim1fact4(n=n,d=d,param=param,fam=fam)
+			 	udata=data$dat
+			 	vlat=data$vlat
+
+				udata_list[[k]]=udata
+				vlat_list[[k]]=vlat
+
+				proxyMean=uscore(apply(udata,1,mean))
+				proxyMean_list[[k]]=proxyMean
+				# fam=rep(NA,d)
+				# par=rep(NA,d)
+				# par2=rep(NA,d)
+
+				res=apply(udata,2,function(x)
+							 	  {BiCopSelect(x,proxyMean,familyset = c(1,2,4,5,7,10,20,14,17))})
+				fam=sapply(res,function(x) x$family)
+				par=sapply(res,function(x) x$par)
+				par2=sapply(res,function(x) x$par2)
+
+				fam_mat[k,]=fam
+
+			#  		fa1=factanal(covmat = cor(nscore(udata)),factors=1)
+			# 					 		load1=c(fa1$loadings)
+			# 					 		load1.tau=bvn.cpar2tau(load1)
+
+				df=mean(par2[which(fam==2)])
+				start=c(rbind(par,par2))
+				start[which(fam==2)*2]=df
+				start_list[[k]]=start
+			 	#start=find_start(fam=fam,tau=load1.tau,df=df)
+
+				ifixed=c(rbind(rep(F,d),rep(T,d)))
+			 	ifixed[2*which(fam==17|fam==7)]=F
+
+				ifixed_list[[k]]=ifixed
+
+
+				tem=return_bound(familyvec = fam)
+				UB=c(rbind(tem$UB1,tem$UB2))
+				LB=c(rbind(tem$LB1,tem$LB2))
+
+				UB_list[[k]]=UB
+				LB_list[[k]]=LB
+
+				dstruct=list(udata=udata,lat=proxyMean,fam=fam)
+
+				out1=pdhessminb(start,f901fproxynllk2,
+												ifixed =ifixed,
+												dstruct=dstruct,
+												LB=LB,UB=UB,
+												mxiter=30,eps=1.e-4,iprint=T)
+
+				mlpx1=out1$parmin
+        mlpx1_mat[k,]=mlpx1
+		proxyNew=latUpdateOnefct2(th=mlpx1,
+															udata=udata,
+															nq=25,xl=xl,wl=wl,
+															family=fam)
+		mlpx1=out2$mlpx1
+		proxyMean=out1$proxyMean
+		dstruct=list(udata=udata,lat=proxyNew,fam=fam)
+		out2=pdhessminb(start,f901fproxynllk2,
+										ifixed =ifixed,
+										dstruct=dstruct,
+										LB=LB,UB=UB,
+										mxiter=30,eps=1.e-4,iprint=T)
+		mlpx2_mat[k,]=mlpx2
+
+				print(k)
+	 	}
+	 	#return(list(thv_mat=thv_mat))
+	return(list(proxyMean_list=proxyMean_list,
+							udata_list=udata_list,
+							vlat_list=vlat_list,
+	      			mlpx1_mat=mlpx1_mat,
+							fam_mat=fam_mat,
+							thv_mat=thv_mat,
+							ifixed_list=ifixed_list,UB_list=UB_list,
+							LB_list=LB_list,start_list=start_list))
+
+}
+
+res10_2=simu1(nsize=1000,n=1000,d=30)
+
+save(file="res10gum_sec2.RData",res10_2)
+
+res20_2=simu1(nsize=1000,n=1000,d=60)
+save(file="res20gum_sec2.RData",res20_2)
+
+res30_2=simu1(nsize=1000,n=500,d=90)
+save(file="res30gum_sec2.RData",res30_2)
+
+res40=simu1(nsize=1000,n=500,d=40)
+save(file="res40gum.RData",res40)
+
+res40=simu1(nsize=1000,n=250,d=40)
+save(file="res40gum_n250.RData",res40)
+
+res50=simu1(nsize=1000,n=500,d=50)
+save(file="res50gum.RData",res50)
+
+res10=simu1(nsize=1000,n=250,d=10)
+save(file="res10gum_n250.RData",res10)
+
+res20=simu1(nsize=1000,n=250,d=20)
+save(file="res20gum_n250.RData",res20)
+
+res30=simu1(nsize=1000,n=250,d=30)
+save(file="res30gum_n250.RData",res30)
+
+res40=simu1(nsize=1000,n=250,d=40)
+save(file="res40gum_n250.RData",res40)
+
+res50=simu1(nsize=1000,n=250,d=50)
+save(file="res50gum_n250.RData",res50)
+#==========================================
+simu2<-function(nsize,n,d,thlow=4.2,thupp=21.5,seed=1234){
+	set.seed(seed)
+	result=matrix(NA,nsize,15)
+	res_list=list()
+	vlat_list=list()
+	for(k in 1:nsize){
+		thv=runif(d,thlow,thupp)
+		data=sim1fact2(n=500,thv,qcondfrk,"frank",ivect=T)
+		udat=data$dat
+		vlat=data$vlat
+		start=rep(10,d)
+		dstruct = list(data=udat, copname="Frank", quad=gl,repar=0);
+		out=pdhessminb(start,f90cop1nllk, ifixed = rep(F,d), dstruct=dstruct,
+									 LB=rep(1,d),UB=rep(30,d),mxiter=50,eps=1.e-4,iprint=F)
+		mlex1=out$parmin #exact parameters
+		out2=proxy1fct(udata=udat,family = 5, start=rep(2,d),
+									 LB=rep(1,d),UB=rep(30,d),xl=xl,wl=wl)
+
+		proxyMean=out2$proxyMean
+		proxyNew=out2$proxyNew
+		mlpx2=out2$mlpx1
+		mlpx3=out2$mlpx2
+		mae=c(mean(abs(proxyMean-vlat)),
+					mean(abs(proxyNew-vlat)),
+					mean(abs(proxyMean-proxyNew)))
+		rmse=c((mean((proxyMean-vlat)^2)),
+					 (mean((proxyNew-vlat)^2)),
+					 (mean((proxyNew-proxyMean)^2)))
+		res=list("v1"=proxyMean,"v2"=proxyNew,
+						 "dif1"=proxyMean-vlat,"dif2"=proxyNew-vlat,
+						 "theta1"=mlex1,"theta2"=mlpx2,"theta3"=mlpx3,
+						 "mse1"=(mean((mlex1-thv)^2)),
+						 "mse2"=(mean((mlpx2-thv)^2)),
+						 "mse3"=(mean((mlpx3-thv)^2)),
+						 "mae1"=mean(abs(mlex1-thv)),
+						 "mae2"=mean(abs(mlpx2-thv)),
+						 "mae3"=mean(abs(mlpx3-thv)),
+						 "mae_proxy"=mae,"mse_proxy"=rmse,
+						 "dif_para"=mean(abs(mlpx2-mlex1)),
+						 "dif_para2"=mean(abs(mlpx3-mlex1)),
+						 "dif_para3"=mean(abs(mlpx3-mlpx2)))
+		res_list[[k]]=res
+		vlat_list[[k]]=vlat
+		result[k,]=c(res$mse1,res$mse2,res$mse3,res$mae1,res$mae2,
+								 res$mae3,res$mae_proxy,res$mse_proxy,res$dif_para,
+								 res$dif_para2,res$dif_para3)
+		print(k)
+	}
+	colnames(result)=c("rmse1","rmse2","rmse3","mae1","mae2","mae3",
+										 "mae_proxy1","mae_proxy2","mae_proxy12",
+										 "rmse_proxy1","rmse_proxy2","rmse_proxy12",
+										 "dif_para","dif_para2","dif_para3")
+	return(list(result=result,res=res_list,vlat_list=vlat_list))
+
+}
+
+res10=simu2(nsize=1000,n=500,d=10)
+save(file="res10frk.RData",res10)
+
+res20=simu2(nsize=1000,n=500,d=20)
+save(file="res20frk.RData",res20)
+
+res30=simu2(nsize=1000,n=500,d=30)
+save(file="res30frk.RData",res30)
+
+res40=simu2(nsize=1000,n=500,d=40)
+save(file="res40frk.RData",res40)
+
+res50=simu2(nsize=1000,n=500,d=50)
+save(file="res50frk.RData",res50)
+
+
+res60=simu1(nsize=1000,n=500,d=60)
+save(file="res60frk.RData",res60)
+
+res70=simu1(nsize=1000,n=500,d=70)
+save(file="res70frk.RData",res70)
+
+
+
+res10=simu2(nsize=1000,n=250,d=10)
+save(file="res10frk_n250.RData",res10)
+
+res20=simu2(nsize=1000,n=250,d=20)
+save(file="res20frk_n250.RData",res20)
+
+res30=simu2(nsize=1000,n=250,d=30)
+save(file="res30frk_n250.RData",res30)
+
+res40=simu2(nsize=1000,n=250,d=40)
+save(file="res40frk_n250.RData",res40)
+
+res50=simu2(nsize=1000,n=250,d=50)
+save(file="res50frk_n250.RData",res50)

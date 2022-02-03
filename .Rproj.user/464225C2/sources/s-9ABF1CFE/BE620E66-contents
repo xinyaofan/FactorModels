@@ -1,0 +1,365 @@
+#results for 1-factor model
+tem=res50$result
+d=50
+#convert rmse to mse
+# tem[,c(1:3,10:12)]=(res50$result[,c(1:3,10:12)])^2
+# colnames(tem)[c(1:3,10:12)]=c("rmse1","rmse2","rmse3","rmse_proxy1",
+# 																	 "rmse_proxy2","rmse_proxy3")
+
+tem2=apply(tem,2,mean)
+tem2[c(1:3,10:12)]=sqrt(tem2[c(1:3,10:12)])
+print(round(tem2,3))
+th1=matrix(NA,1000,d)
+th2=matrix(NA,1000,d)
+th3=matrix(NA,1000,d)
+tau1=matrix(NA,1000,d)
+tau2=matrix(NA,1000,d)
+tau3=matrix(NA,1000,d)
+for(k in 1:1000){
+	th1[k,]=res50$res[[k]]$theta1
+	th2[k,]=res50$res[[k]]$theta2
+	th3[k,]=res50$res[[k]]$theta3
+}
+
+for(k in 1:1000){
+	tau1[k,]= BiCopPar2Tau(family=4,par=th1[k,])
+	tau2[k,]= BiCopPar2Tau(family=4,par=th2[k,])
+	tau3[k,]= BiCopPar2Tau(family=4,par=th3[k,])
+}
+
+#tau-diff
+round(mean(abs(tau2-tau1)),3)
+round(mean(abs(tau3-tau1)),3)
+
+
+#============================
+#record the simulation results for 1-factor copula with weak
+#residual dep
+tem=res50$result
+d=50
+l=2*d-1
+th1=matrix(NA,1000,d)
+th2=matrix(NA,1000,d)
+th3=matrix(NA,1000,d)
+th11=matrix(NA,1000,d-1)
+th22=matrix(NA,1000,d-1)
+th33=matrix(NA,1000,d-1)
+tau1=matrix(NA,1000,d)
+tau2=matrix(NA,1000,d)
+tau3=matrix(NA,1000,d)
+tau11=matrix(NA,1000,d-1)
+tau22=matrix(NA,1000,d-1)
+tau33=matrix(NA,1000,d-1)
+for(k in 1:1000){
+	th1[k,]=res50$res[[k]]$theta1[1:d]
+	th11[k,]=res50$res[[k]]$theta1[(d+1):l]
+	th2[k,]=res50$res[[k]]$theta2[1:d]
+	th22[k,]=res50$res[[k]]$theta2[(d+1):l]
+	th3[k,]=res50$res[[k]]$theta3[1:d]
+	th33[k,]=res50$res[[k]]$theta3[(d+1):l]
+}
+
+for(k in 1:1000){
+	tau11[k,]=BiCopPar2Tau(family=5,par=th11[k,])
+	tau22[k,]=BiCopPar2Tau(family=5,par=th22[k,])
+	tau33[k,]=BiCopPar2Tau(family=5,par=th33[k,])
+	tau1[k,]= BiCopPar2Tau(family=4,par=th1[k,])
+	tau2[k,]= BiCopPar2Tau(family=4,par=th2[k,])
+	tau3[k,]= BiCopPar2Tau(family=4,par=th3[k,])
+}
+
+dif1=th1-thv50[,1:d]
+dif11=th11-thv50[,(d+1):l]
+
+dif2=th2-thv50[,1:d]
+dif22=th22-thv50[,(d+1):l]
+
+
+dif3=th3-thv50[,1:d]
+dif33=th33-thv50[,(d+1):l]
+
+#rmse of estimated parameters
+print(round(c(sqrt(mean(dif1^2)),
+				sqrt(mean(dif2^2)),
+				sqrt(mean(dif3^2))),3))
+#mae of estimated parameters
+print(round(c((mean(abs(dif1))),
+							(mean(abs(dif2))),
+							(mean(abs(dif3)))),3))
+#rmse of estimated paramters for residual
+print(round(c(sqrt(mean(dif11^2)),
+				sqrt(mean(dif22^2)),
+				sqrt(mean(dif33^2))),3))
+#mae of estimated parameters for residual tree
+print(round(c((mean(abs(dif11))),
+							(mean(abs(dif22))),
+							(mean(abs(dif33)))),3))
+
+#convert rmse to mse
+tem[,c(1:3,10:12)]=(res30$result[,c(1:3,10:12)])^2
+colnames(tem)[c(1:3,10:12)]=c("rmse1","rmse2","rmse3","rmse_proxy1",
+																	 "rmse_proxy2","rmse_proxy3")
+tem2=apply(tem,2,mean)
+tem2[c(1:3,10:12)]=sqrt(tem2[c(1:3,10:12)])
+print(round(tem2,3))
+
+# rmse1       rmse2       rmse3
+# 0.295       0.718       0.722
+
+
+dif12=th1-th2
+dif13=th1-th3
+dif12_1=th11-th22
+dif13_1=th11-th33
+
+#rmse of theta difference
+print(round(c(mean(abs(dif12)),mean(abs(dif13))),3))
+#rmse of theta difference in resdidual tree
+print(round(c(mean(abs(dif12_1)),mean(abs(dif13_1))),3))
+
+tau_dif1=tau1-tau2
+tau_dif11=tau11-tau22
+tau_dif2=tau1-tau3
+tau_dif22=tau11-tau33
+#mae of tau difference
+print(round(c(mean(abs(tau_dif1)),mean(abs(tau_dif2))),3))
+#mae of tau difference in residual tree
+print(round(c(mean(abs(tau_dif11)),mean(abs(tau_dif22))),3))
+
+
+
+
+#=============================================
+#record the results of oblique factor copual model
+ress=res20
+tem=ress$result
+d=20
+mgrp=3
+l=d*mgrp+3*2/2
+th1=matrix(NA,1000,d*mgrp)
+th2=matrix(NA,1000,d*mgrp)
+th3=matrix(NA,1000,d*mgrp)
+th11=matrix(NA,1000,3)
+th22=matrix(NA,1000,3)
+th33=matrix(NA,1000,3)
+tau1=matrix(NA,1000,d*mgrp)
+tau2=matrix(NA,1000,d*mgrp)
+tau3=matrix(NA,1000,d*mgrp)
+tau11=matrix(NA,1000,3)
+tau22=matrix(NA,1000,3)
+tau33=matrix(NA,1000,3)
+for(k in 1:1000){
+	th1[k,]=ress$res[[k]]$theta1[4:l]
+	th11[k,]=ress$res[[k]]$theta1[1:3]
+	th2[k,]=ress$res[[k]]$theta2[4:l]
+	th22[k,]=ress$res[[k]]$theta2[1:3]
+	th3[k,]=ress$res[[k]]$theta3[4:l]
+	th33[k,]=ress$res[[k]]$theta3[(1:3)]
+}
+
+for(k in 1:1000){
+	tau11[k,]=BiCopPar2Tau(family=5,par=th11[k,])
+	tau22[k,]=BiCopPar2Tau(family=5,par=th22[k,])
+	tau33[k,]=BiCopPar2Tau(family=5,par=th33[k,])
+	tau1[k,]= BiCopPar2Tau(family=4,par=th1[k,])
+	tau2[k,]= BiCopPar2Tau(family=4,par=th2[k,])
+	tau3[k,]= BiCopPar2Tau(family=4,par=th3[k,])
+}
+
+# thv1=thv10$thv1
+# thv2=thv10$thv2
+#
+# dif1=th1-thv2
+# dif11=th11-thv1
+#
+# dif2=th2-thv2
+# dif22=th22-thv1
+#
+#
+# dif3=th3-thv2
+# dif33=th33-thv1
+
+
+colnames(ress$result)
+# [1] "rmse11"       "rmse21"
+# [3] "rmse31"       "rmse1"
+# [5] "rmse2"        "rmse3"
+# [7] "mae1_1"       "mae2_1"
+# [9] "mae3_1"       "mae1"
+# [11] "mae2"         "mae3"
+# [13] "mae_proxy1"   "mae_proxy2"
+# [15] "mae_proxy12"  "rmse_proxy1"
+# [17] "rmse_proxy2"  "rmse_proxy12"
+# [19] "dif_para_1"   "dif_para2_1"
+# [21] "dif_para"     "dif_para2"
+#convert rmse to mse
+tem=ress$result
+tem[,c(1:8,16:18)]=(ress$result[,c(1:8,16:18)])^2
+tem=tem[-ind,]
+#
+tem2=apply(tem,2,mean)
+tem2[c(1:8,16:18)]=sqrt(tem2[c(1:8,16:18)])
+print(round(tem2,3))
+
+
+tau1=tau1[-ind,]
+tau2=tau2[-ind,]
+tau3=tau3[-ind,]
+
+tau11=tau1[-ind,]
+tau22=tau2[-ind,]
+tau33=tau3[-ind,]
+
+
+tau_dif1=tau1-tau2
+tau_dif11=tau11-tau22
+tau_dif2=tau1-tau3
+tau_dif22=tau11-tau33
+
+
+#mae of tau difference
+print(round(c(mean(abs(tau_dif1)),mean(abs(tau_dif2))),3))
+#mae of tau difference in residual tree
+print(round(c(mean(abs(tau_dif11)),mean(abs(tau_dif22))),3))
+
+
+
+#===========
+#record the results for 1-factor copula model
+#with different copula families
+load("res10_2.RData")
+d=30
+fam_mat=res10_2$fam_mat
+mlpx1=res10_2$mlpx1_mat
+
+return_tau<-function(fam,mlpx){
+	d=length(fam)
+	tau=rep(NA,d)
+	upper=rep(NA,d)
+	lower=rep(NA,d)
+	srho=rep(NA,d)
+	d=length(fam)
+	for(j in 1:d){
+		jj=c(2*j-1,2*j)
+		tem=mlpx[jj]
+		bicop=BiCop(family=fam[j],par=tem[1],par2=tem[2])
+		tau[j]=BiCopPar2Tau(family=fam[j],par=tem[1],par2=tem[2])
+		upper[j]=BiCopPar2TailDep(bicop)$upper
+		lower[j]=BiCopPar2TailDep(bicop)$lower
+		#srho[j]=
+		if(fam[j]==5){
+			srho[j]=frk.cpar2rhoS((tem[1]))
+		}else if(fam[j]==4){
+			srho[j]=gum.cpar2rhoS(c(tem[1]))
+		}else {
+		sample=BiCopSim(N=5000,family=fam[j],par=tem[1],par2=tem[2])
+		srho[j]=cor(sample[,1],sample[,2],method="spearman")
+		}
+	}
+	return(list(tau=tau,upper=upper,lower=lower,srho=srho))
+}
+
+d=90
+thv_mat=res30_2$thv_mat
+mlpx1=res30_2$mlpx1_mat
+mlpx2=res30_2$mlpx2_mat
+fam_mat=res30_2$fam_mat
+famm=c(rep(4,d/3),rep(5,d/3),rep(2,d/3))
+tau_mat=matrix(NA,1000,d)
+tau_true=matrix(NA,1000,d)
+rho_mat=matrix(NA,1000,d)
+
+tau_mat1=matrix(NA,1000,d)
+rho_mat1=matrix(NA,1000,d)
+upper_mat1=matrix(NA,1000,d)
+lower_mat1=matrix(NA,1000,d)
+
+rho_true=matrix(NA,1000,d)
+upper_mat=matrix(NA,1000,d)
+upper_true=matrix(NA,1000,d)
+lower_mat=matrix(NA,1000,d)
+lower_true=matrix(NA,1000,d)
+for(i in 1:1000){
+	res1=return_tau(fam=fam_mat[i,],mlpx=mlpx1[i,])
+	tau_mat1[i,]=res1$tau
+	rho_mat1[i,]=res1$srho
+	upper_mat1[i,]=res1$upper
+	lower_mat1[i,]=res1$lower
+
+
+	res2=return_tau(fam=fam_mat[i,],mlpx=mlpx2[i,])
+	tau_mat[i,]=res2$tau
+	rho_mat[i,]=res2$srho
+	upper_mat[i,]=res2$upper
+	lower_mat[i,]=res2$lower
+
+	res2=return_tau(fam=famm,mlpx=thv_mat[i,])
+	tau_true[i,]=res2$tau
+	rho_true[i,]=res2$srho
+	upper_true[i,]=res2$upper
+  lower_true[i,]=res2$lower
+  print(i)
+}
+
+
+round(c(mean(abs(rho_true-rho_mat1)),
+				mean(abs(rho_true-rho_mat))),3)
+
+round(c(max(abs(rho_true-rho_mat1)),
+				max(abs(rho_true-rho_mat))),3)
+
+round(c(mean(abs(tau_true-tau_mat1)),
+				mean(abs(tau_true-tau_mat))),3)
+
+round(c(max(abs(tau_true-tau_mat1)),
+				max(abs(tau_true-tau_mat))),3)
+
+round(c(mean(abs(upper_true-upper_mat1)),
+				mean(abs(upper_true-upper_mat))),3)
+
+round(c(max(abs(upper_true-upper_mat1)),
+				max(abs(upper_true-upper_mat))),3)
+
+round(c(mean(abs(lower_true-lower_mat1)),
+				mean(abs(lower_true-lower_mat))),3)
+
+round(c(max(abs(lower_true-lower_mat1)),
+				max(abs(lower_true-lower_mat))),3)
+
+for(i in 1:length(ind)){
+	tem=which(dif==dif[ind[i]],arr.ind=T)
+	print(famm[tem[2]])
+	}
+
+vlat=matrix(unlist(res30_2$vlat_list),1000,1000,T)
+proxymean=matrix(unlist(res30_2$proxyMean_list),1000,1000,T)
+proxynew=matrix(unlist(res30_2$proxyNew_list),1000,1000,T)
+
+round(sqrt(mean((proxymean-vlat)^2)),3)
+round(mean(abs(proxymean-vlat)),3)
+
+round(sqrt(mean((proxynew-vlat)^2)),3)
+round(mean(abs(proxynew-vlat)),3)
+
+#==============
+#record the simulation results for bi-factor copula model
+result=res10$result #1000 20
+# [1] "mse1_glob" "mse2_glob" "mse3_glob"
+# [4] "mae1_glob" "mae2_glob" "mae3_glob"
+# [7] "mse1_loc"  "mse2_loc"  "mse3_loc"
+# [10] "mae1_loc"  "mae2_loc"  "mae3_loc"
+# [13] "dif1_glob" "dif2_glob" "tau1_glob"
+# [16] "tau2_glob" "dif1_loc"  "dif2_loc"
+# [19] "tau1_loc"  "tau2_loc"
+tem=apply(result,2,mean)
+tem[c(1:3,7:9)]=sqrt(tem[c(1:3,7:9)])
+
+vlat=matrix(unlist(res10$vlat_list),1000,1000,T)
+proxymean=matrix(unlist(res10$fs_list),1000,1000,T)
+proxynew=matrix(unlist(res10$proxyNew),1000,1000,T)
+
+round(sqrt(mean((proxymean-vlat)^2)),3)
+round(mean(abs(proxymean-vlat)),3)
+
+round(sqrt(mean((proxynew-vlat)^2)),3)
+round(mean(abs(proxynew-vlat)),3)

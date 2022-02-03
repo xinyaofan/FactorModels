@@ -1,0 +1,17 @@
+setwd("/Users/xinyaofan/Desktop/aaaaaa")
+dyn.load("mylib.so")
+load("test.RData")
+latUpdateOnefct2<- function(th,udata,nq,xl,wl,family) {
+	n=dim(udata)[1]
+	d=dim(udata)[2]
+	nq=length(xl)
+
+	out=.Fortran("latupdate3",as.double(th),as.integer(n),as.integer(d),
+							 as.double(udata),as.integer(nq),as.double(xl),as.double(wl),
+							 as.integer(family),
+							 lat=as.double(rep(0,n)))
+	return(out$lat)
+}
+
+lat_update=latUpdateOnefct2(th=mlpx1,udata=udata,
+														nq=25,xl=xl,wl=wl,family=fam)

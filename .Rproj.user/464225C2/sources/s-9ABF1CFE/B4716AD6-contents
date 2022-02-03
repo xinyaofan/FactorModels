@@ -1,0 +1,58 @@
+#' @description
+#' tail-weighted dependence parameter in Lee et al (2018, J Nonparametrics)
+#' \zeta(a)=2+a-a/integral, a=alpha
+#' integral \int_0^1 C(x^{1/a},x^{1/a}) dx
+#'
+#' @param cpar copula parameter
+#' @param pcop copula cdf
+#' @param alpha positive variable, 1 for central dependence, large for tail-weighted
+#' @param irefl T for reflection
+#' @param zero endpoint of integration to use for 0
+#'  
+#' @return zeta(alpha0 value for pcop with parameter cpar
+#'
+zdep=function(cpar,pcop,alpha,irefl=F,zero=0)
+{ a1=1/alpha
+  gfn=function(x) { pcop(x^a1,x^a1,cpar) }
+  gfnrefl=function(x) { pcop(1-x^a1,1-x^a1,cpar) }
+  if(!irefl)
+  { tem=integrate(gfn,zero,1-zero)
+    tem=tem$value
+  }
+  else
+  { tem=integrate(gfnrefl,zero,1-zero)
+    tem=2*alpha/(alpha+1)-1+tem$value
+  }
+  zeta= 2+alpha-alpha/tem
+  zeta
+}
+
+testfn=function()
+{ parbb1=c(0.5,1.5)
+  # central dependence
+  z1pbb1low=zdep(parbb1,pbb1,1,irefl=T,zero=.00001)
+  z1pbb1upp=zdep(parbb1,pbb1,1,irefl=F,zero=.00001)
+  cat(1,z1pbb1low,z1pbb1upp,"\n")
+  # lower tail-weighted
+  z10pbb1low=zdep(parbb1,pbb1,10,irefl=T,zero=.00001)
+  # upper tail-weighted
+  z10pbb1upp=zdep(parbb1,pbb1,10,irefl=F,zero=.00001)
+  cat(10,z10pbb1low,z10pbb1upp,"\n")
+  z15pbb1low=zdep(parbb1,pbb1,15,irefl=T,zero=.00001)
+  z15pbb1upp=zdep(parbb1,pbb1,15,irefl=F,zero=.00001)
+  cat(15,z15pbb1low,z15pbb1upp,"\n")
+  # lower and upper tail-dependence parameters 
+  taild= bb1.cpar2lm(parbb1)
+  cat("Inf",taild,"\n")
+  invisible(0)
+}
+
+#library(CopulaModel)
+#testfn()
+#1 0.5520207 0.5520207 
+#10 0.476777 0.4495307 
+#15 0.4665059 0.4388584 
+#Inf 0.3968503 0.4125989 
+
+
+

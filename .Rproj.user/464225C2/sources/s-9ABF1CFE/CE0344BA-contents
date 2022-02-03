@@ -1,0 +1,21 @@
+mlpx1_mat=matrix(NA,1000,60)
+for(k in 1:1000){
+	udata=res10_2$udata_list[[k]]
+	proxyMean=res10_2$proxyMean_list[[k]]
+	fam=res10_2$fam_mat[k,]
+	start=res10_2$start_list[[k]]
+	ifixed=res10_2$ifixed_list[[k]]
+	LB=res10_2$LB_list[[k]]
+	UB=res10_2$UB_list[[k]]
+	
+	dstruct=list(udata=udata,lat=proxyMean,fam=fam)
+	
+	out1=pdhessminb(start,f901fproxynllk2,
+									ifixed =ifixed,
+									dstruct=dstruct,
+									LB=LB,UB=UB,
+									mxiter=30,eps=1.e-4,iprint=T)
+	
+	mlpx1=out1$parmin
+	mlpx1_mat[k,]=mlpx1
+}

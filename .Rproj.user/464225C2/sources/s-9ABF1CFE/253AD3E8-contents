@@ -1,0 +1,119 @@
+#this file is to test the proxy method in the bi-factor copula models
+library(FactorModels)
+library(VineCopula)
+library(CopulaModel)
+#'nsize simulation size
+#'n sample size
+#'d data dimension
+#'thlow lower bound for theta
+#'thupp upper bound for theta
+
+gl=gausslegendre(25)
+xl=gl$nodes
+wl=gl$weights
+
+simBifctgum<-function(nsize,grsize,n,seed=1234){
+	set.seed(seed)
+	result=matrix(NA,nsize,20)
+	res_list=list()
+	vlat_list=list()
+	fs_list=list()
+	proxyNew_list=list()
+	d=sum(grsize)
+	dvar=2*d
+  condNum=rep(NA,nsize)
+  parbi_list<-list()
+	for(k in 1:nsize){
+		parbi=c(runif(d,1.25,2.5),runif(d,1.67,5)) #parameters length=200
+		data=simbifact2(n=n,grsize=grsize,cop=3,parbi)
+		udata=data$zdata
+		start=c(rep(0.6,d),rep(0.5,d))
+		parbi_list[[k]]=parbi
+		
+    # run three methods
+		out2=proxyBifact(udata=udata,grsize,start,xl,wl)
+		condNum[k]=out2$condNum
+		
+		mlex1=out2$mlex1
+		proxyMean=out2$proxyMean
+		proxyNew=out2$proxyNew
+		mlpx2=out2$mlpx1
+		mlpx3=out2$mlpx2
+		
+		fs_list[[k]]=proxyMean
+		proxyNew_list[[k]]=proxyNew
+		
+		vlat=cbind(data$v0,data$vg) 
+		
+		mlex1_loc=mlex1[(d+1):dvar]
+		mlex1_glob=mlex1[1:d]
+		mlpx2_loc=mlpx2[(d+1):dvar]
+		mlpx2_glob=mlpx2[1:d]
+		mlpx3_loc=mlpx3[(d+1):dvar]
+		mlpx3_glob=mlpx3[1:d]
+		par_glob=parbi[1:d]
+		par_loc=parbi[(d+1):dvar]
+		
+		tau1=BiCopPar2Tau(family=4,par=mlex1)
+		tau2=BiCopPar2Tau(family=4,par=mlpx2)
+		tau3=BiCopPar2Tau(family=4,par=mlpx3)
+		
+		tau1_glob=tau1[1:d]
+		tau2_glob=tau2[1:d]
+		tau3_glob=tau3[1:d]
+		
+		tau1_loc=tau1[(d+1):dvar]
+		tau2_loc=tau2[(d+1):dvar]
+		tau3_loc=tau3[(d+1):dvar]
+		
+		res=list( "v1"=proxyMean,"v2"=proxyNew,"vlat"=vlat,
+						  "theta1"=mlex1,"theta2"=mlpx2,"theta3"=mlpx3,
+						  "mse1_glob"=mean((mlex1_glob-par_glob)^2),
+		 				  "mse2_glob"=mean((mlpx2_glob-par_glob)^2),
+						  "mse3_glob"=mean((mlpx3_glob-par_glob)^2),
+						  "mae1_glob"=mean(abs(mlex1_glob-par_glob)),
+						  "mae2_glob"=mean(abs(mlpx2_glob-par_glob)),
+						  "mae3_glob"=mean(abs(mlpx3_glob-par_glob)),
+						  "mse1_loc"=mean((mlex1_loc-par_loc)^2),
+						  "mse2_loc"=mean((mlpx2_loc-par_loc)^2),
+						  "mse3_loc"=mean((mlpx3_loc-par_loc)^2),
+						  "mae1_loc"=mean(abs(mlex1_loc-par_loc)),
+						  "mae2_loc"=mean(abs(mlpx2_loc-par_loc)),
+						  "mae3_loc"=mean(abs(mlpx3_loc-par_loc)),
+							"dif1_loc"=mean(abs(mlpx2_loc-mlex1_loc)),
+							"dif2_loc"=mean(abs(mlpx3_loc-mlex1_loc)),
+							"dif1_glob"=mean(abs(mlpx2_glob-mlex1_glob)),
+							"dif2_glob"=mean(abs(mlpx3_glob-mlex1_glob)),
+							"tau1_loc"=mean(abs(tau1_loc-tau2_loc)),
+							"tau2_loc"=mean(abs(tau1_loc-tau3_loc)),
+							"tau1_glob"=mean(abs(tau1_glob-tau2_glob)),
+							"tau2_glob"=mean(abs(tau1_glob-tau3_glob)))
+		res_list[[k]]=res
+		vlat_list[[k]]=vlat
+	  result[k,]=c(res$mse1_glob,res$mse2_glob,res$mae3_glob,
+	  						 res$mae1_glob,res$mae2_glob,res$mae3_glob,
+	  						 res$mse1_loc,res$mse2_loc,res$mse3_loc,
+	  						 res$mae1_loc,res$mae2_loc,res$mae3_loc,
+	  						 res$dif1_glob,res$dif2_glob,
+	  						 res$tau1_glob,res$tau2_glob,
+	  						 res$dif1_loc,res$dif2_loc,
+	  						 res$tau1_loc,res$tau2_loc)
+		print(k)
+	}
+	colnames(result)=c("mse1_glob","mse2_glob","mse3_glob",
+										 "mae1_glob","mae2_glob","mae3_glob",
+										 "mse1_loc","mse2_loc","mse3_loc",
+										 "mae1_loc","mae2_loc","mae3_loc",
+										 "dif1_glob","dif2_glob",
+										 "tau1_glob","tau2_glob",
+										 "dif1_loc","dif2_loc",
+										 "tau1_loc","tau2_loc")
+	return(list(result=result,res=res_list,
+							vlat_list=vlat_list,
+							condNum=condNum,fs_list=fs_list,
+							proxyNew=proxyNew_list,
+							parbi_list=parbi_list))
+}
+
+res10=simBifctgum(nsize=1000,grsize=c(10,10,10),n=1000)
+save(file="res10.RData",res10)

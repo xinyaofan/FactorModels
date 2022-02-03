@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1621254180812.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "94609AAA",
+    "lastKnownWriteTime" : 1621308380,
+    "last_content_update" : 1621308419857,
+    "path" : "~/Desktop/aaaaaa/simulation_bifact20210517.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "243,34",
+        "scrollLine" : "233",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

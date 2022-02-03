@@ -1,0 +1,280 @@
+]0;~/Desktop/FactorModels[?1034hXinyaodeMacBook-Pro:FactorModels xinyaofan$ cd  desktop
+bash: cd: desktop: No such file or directory
+]0;~/Desktop/FactorModelsXinyaodeMacBook-Pro:FactorModels xinyaofan$ l[Kcd  d[KDd[Kesktop
+bash: cd: Desktop: No such file or directory
+]0;~/Desktop/FactorModelsXinyaodeMacBook-Pro:FactorModels xinyaofan$ cd  DESCRIPTION [K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[Kcd  ..
+]0;~/DesktopXinyaodeMacBook-Pro:Desktop xinyaofan$ cd Facto rModels
+]0;~/Desktop/FactorModelsXinyaodeMacBook-Pro:FactorModels xinyaofan$ gfo rtran -fpic [K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[Ksrc [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[Kcd  src
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ ls
+1fact.f90
+1fact.o
+2derivs.f90
+2derivs.o
+FactorModels.so
+Rproxyft.f90
+Rproxyft.o
+bifact_latupdate.f90
+bifact_latupdate.o
+bifct_proxynllk.f90
+bifct_proxynllk.o
+ccopderiv.f90
+ccopderiv.o
+oblique_factor.f90
+oblique_factor.o
+ptbeta.c
+ptbeta.o
+qnorms.f90
+qnorms.o
+student_t.f90
+student_t.o
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ dyn.load("./ src/FactorModels.so")
+bash: syntax error near unexpected token `"./src/FactorModels.so"'
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfortran -sh ared -o 1fact.o 2derivs.o biff[Kct_proxynllk.o bif act_latupdate.o ccopderiv.o ptbeta.o qnorms.o r [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cr [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[CR proxyft.o student_t.o oblique_factor.o 
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ c[Kls
+1fact.f90
+1fact.o
+2derivs.f90
+2derivs.o
+FactorModels.so
+Rproxyft.f90
+Rproxyft.o
+bifact_latupdate.f90
+bifact_latupdate.o
+bifct_proxynllk.f90
+bifct_proxynllk.o
+ccopderiv.f90
+ccopderiv.o
+oblique_factor.f90
+oblique_factor.o
+ptbeta.c
+ptbeta.o
+qnorms.f90
+qnorms.o
+student_t.f90
+student_t.o
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ dyn.load("./ src/FactorModels.so")
+bash: syntax error near unexpected token `"./src/FactorModels.so"'
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ dyn.load("./ssrc/FactorModels.so")[A[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[Kgfortran -fp ic -c latupdate.f90 
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfortran -fpiic -c latupdate.f90 [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cdyn.load("./src/FactorModels.so")[A[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgfortran -shaared -o 1fact.o 2derivs.o bifct_proxynllk.o bifaact_latupdate.o ccopderiv.o ptbeta.o qnorms.o Rpproxyft.o student_t.o oblique_factor.o latupdatee.o
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ ls
+1fact.f90
+1fact.o
+2derivs.f90
+2derivs.o
+FactorModels.so
+Rproxyft.f90
+Rproxyft.o
+bifact_latupdate.f90
+bifact_latupdate.o
+bifct_proxynllk.f90
+bifct_proxynllk.o
+ccopderiv.f90
+ccopderiv.o
+latupdate.f90
+latupdate.o
+oblique_factor.f90
+oblique_factor.o
+ptbeta.c
+ptbeta.o
+qnorms.f90
+qnorms.o
+student_t.f90
+student_t.o
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ lsgfortran -shaared -o 1fact.o 2derivs.o bifct_proxynllk.o bifaact_latupdate.o ccopderiv.o ptbeta.o qnorms.o Rpproxyft.o student_t.o oblique_factor.o latupdatee.o 
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfortran -shaared -o 1fact.o 2derivs.o bifct_proxynllk.o bifaact_latupdate.o ccopderiv.o ptbeta.o qnorms.o Rpproxyft.o student_t.o oblique_factor.o latupdatee.o [K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K FactorModels.so on[K[K1fact.o 2derivs.o bifac t_latupdate.o bifct_proxynllk.o ccopderiv.o obl ique_factor.o t[Kptbeta.o qnorms.o p[KRpor[K[Kroxyft.o stud ent_t.o latupdate.o
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ goft[K[K[K[Kg[Kf[Kgfortran -fp ic i[K-c 1fact.f90 2derivs.f90 bifact_latupdate.f900 bifct_proxynllk.f90 ccopderiv.f90 oblique_facttor.f90 ptbeta.c qnorms.f90 r[Kr[Kr[Kr[KRproxyft.f90 studentt_t.f90 latupdate.f90 
+gfortran: error trying to exec 'cc1': execvp: No such file or directory
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfortran [K[K[K[K[K[K[K[K[Kls
+1fact.f90
+1fact.o
+2derivs.f90
+2derivs.o
+Rproxyft.f90
+Rproxyft.o
+bifact_latupdate.f90
+bifact_latupdate.o
+bifct_proxynllk.f90
+bifct_proxynllk.o
+ccopderiv.f90
+ccopderiv.o
+latupdate.f90
+latupdate.o
+oblique_factor.f90
+oblique_factor.o
+ptbeta.c
+qnorms.f90
+qnorms.o
+student_t.f90
+student_t.o
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfrotran -sh ar[Kre[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ksh ared -o m[KFactorModels.so 1fact.o 2derivs.o bifac t_latupdate.o bifct_proxynllk.o ccopderiv.o obliique_factor.o ptbeta.c [K[Ko ob[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K-fp ic =-[K[K-c ptbeta.c 
+bash: gfrotran: command not found
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ fortra[K[K[K[K[K[Kgofr[K[K[Kfortran -fp ic -c ptbeta.c 
+gfortran: error trying to exec 'cc1': execvp: No such file or directory
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ [KXinyaodeMacBook-Pro:src xinyaofan$ gof[K[Kcc -fpic -c ptbeta.c 
+In file included from [01m[Kptbeta.c:1[m[K:
+[01m[K/usr/local/lib/gcc/x86_64-apple-darwin17.5.0/8.1.0/include-fixed/stdio.h:78:10:[m[K [01;31m[Kfatal error: [m[K_stdio.h: No such file or directory
+ #include [01;31m[K<_stdio.h>[m[K
+          [01;31m[K^~~~~~~~~~[m[K
+compilation terminated.
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ f[Kgoft[K[K[Kfotra[K[K[Krtran -p[Kfpic i[K-f[Kc ptbeta.c 
+gfortran: error trying to exec 'cc1': execvp: No such file or directory
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ go[Kfortran -shared -o m[KFactorMol [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cd els.so 1fact.o 2derivs.o bifact_latupdate.o bifct_proxynllk.o co [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cc opderiv.o oblique_factor.o ptbeta.o qnorms.o Rproxyft.o student_tt.o latupdate.o
+ld: warning: object file (ptbeta.o) was built for newer OSX version (10.14) than being linked (10.12.7)
+]0;~/Desktop/FactorModels/src[?1034hXinyaodeMacBook-Pro:src xinyaofan$ [KXinyaodeMacBook-Pro:src xinyaofan$ ls
+1fact.f90		ccopderiv.o
+1fact.o			latupdate.f90
+2derivs.f90		latupdate.o
+2derivs.o		oblique_factor.f90
+FactorModels.so		oblique_factor.o
+Rproxyft.f90		ptbeta.c
+Rproxyft.o		ptbeta.o
+bifact_latupdate.f90	qnorms.f90
+bifact_latupdate.o	qnorms.o
+bifct_proxynllk.f90	student_t.f90
+bifct_proxynllk.o	student_t.o
+ccopderiv.f90
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ library(FactorMo dels)
+bash: syntax error near unexpected token `FactorModels'
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ thlow=1.67
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ thupp=5.6
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ set.seed(2021)
+bash: syntax error near unexpected token `2021'
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ d=30
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ thv=runif(d,thlo w,thupp)
+bash: syntax error near unexpected token `('
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ ls
+1fact.f90		gauleg.c
+1fact.o			gauleg.o
+2derivs.f90		latupdate.f90
+2derivs.o		latupdate.o
+FactorModels.so		oblique_factor.f90
+Rproxyft.f90		oblique_factor.o
+Rproxyft.o		ptbeta.c
+bifact_latupdate.f90	ptbeta.o
+bifact_latupdate.o	qnorms.f90
+bifct_proxynllk.f90	qnorms.o
+bifct_proxynllk.o	student_t.f90
+ccopderiv.f90		student_t.o
+ccopderiv.o
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfortran -shared  -o FactorModels one[K[K[K1fact.o latupdate.o bifact_latupdatte.o bifct_proxynllk.o oblique_factor.o ccopderiv.o  [K2der[Kris[K[K[K[K[K[K2der[K[K[K[Kpt[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Koxynllk.o 2derivs.o student_t.o qnorms..o bifact_latupdate.o ccopderiv.o Rproxyft.o latupdaate.o ptbeta.o gauleg.o 
+ld: warning: ld: warning: object file (gauleg.o) was built for newer OSX version (10.14) than being linked (10.12.7)object file (ptbeta.o) was built for newer OSX version (10.14) than being linked (10.12.7)
+
+duplicate symbol _innerint_ in:
+    bifact_latupdate.o
+duplicate symbol _latupdatebifact_ in:
+    bifact_latupdate.o
+duplicate symbol _innerint2_ in:
+    bifact_latupdate.o
+duplicate symbol _latupdatebifact2_ in:
+    bifact_latupdate.o
+duplicate symbol _lgau_ in:
+    latupdate.o
+duplicate symbol _lgum_ in:
+    latupdate.o
+duplicate symbol _lfrk_ in:
+    latupdate.o
+duplicate symbol _latupdate_ in:
+    latupdate.o
+ld: 8 duplicate symbols for architecture x86_64
+collect2: error: ld returned 1 exit status
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfortran -shared  -o FactorModels 1fact.o latupdate.o bifact_latupdatte.o bifct_proxynllk.o 2derivs.o student_t.o qnorms..o bifact_latupdate.o ccopderiv.o Rproxyft.o latupdaate.o ptbeta.o gauleg.o [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdat[1P[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate[1P[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.[1P[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o[1P[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o [1P[A[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o p[1P[A[C[C[C[C[C[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o pt[1P[A[C[C[C[C[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o ptb[1P[A[C[C[C[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o ptbe[1P[A[C[C[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o ptbet[1P[A[C[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o ptbeta[1P[A[C[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o ptbeta.[1P[A[C[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o ptbeta.o[1P[A[C[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o ptbeta.o [1P[A[C[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o ptbeta.o g[1P[A[C[C[C[Co ccopderiv.o Rproxyft.o latupdate.o ptbeta.o ga[1P[A[C[C[Co ccopderiv.o Rproxyft.o latupdate.o ptbeta.o gau[1P[A[C[C[C ccopderiv.o Rproxyft.o latupdate.o ptbeta.o gaul[1P[A[C[C
+
+ld: warning: ld: warning: object file (ptbeta.o) was built for newer OSX version (10.14) than being linked (10.12.7)object file (gauleg.o) was built for newer OSX version (10.14) than being linked (10.12.7)
+
+duplicate symbol _lgau_ in:
+    latupdate.o
+duplicate symbol _lgum_ in:
+    latupdate.o
+duplicate symbol _lfrk_ in:
+    latupdate.o
+duplicate symbol _latupdate_ in:
+    latupdate.o
+ld: 4 duplicate symbols for architecture x86_64
+collect2: error: ld returned 1 exit status
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfortran -shared  -o FactorModels 1fact.o latupdate.o bifact_latupdatte.o bifct_proxynllk.o 2derivs.o student_t.o qnorms..o  ccopderiv.o Rproxyft.o latupdate.o ptbeta.o gaulleg.o [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ptbeta.o gaule[1P[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ptbeta.o gauleg[1P[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ptbeta.o gauleg.[1P[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ptbeta.o gauleg.o[1P [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ptbeta.o gauleg.o [K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co ptbeta.o gauleg.o  [K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P[1P[1P[C[1P
+ld: warning: ld: warning: object file (gauleg.o) was built for newer OSX version (10.14) than being linked (10.12.7)object file (ptbeta.o) was built for newer OSX version (10.14) than being linked (10.12.7)
+
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfortran -shared  -o FactorModels 1fact.o latupdate.o bifact_latupdatte.o bifct_proxynllk.o 2derivs.o student_t.o qnorms..o  ccopderiv.o Rproxyft.o  ptbeta.o gauleg.o [1P
+ld: warning: object file (ptbeta.o) was built for newer OSX version (10.14) than being linked (10.12.7)ld: warning: 
+object file (gauleg.o) was built for newer OSX version (10.14) than being linked (10.12.7)
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ ls
+1fact.f90		ccopderiv.o
+1fact.o			gauleg.c
+2derivs.f90		gauleg.o
+2derivs.o		latupdate.f90
+FactorModels		latupdate.o
+FactorModels.so		oblique_factor.f90
+Rproxyft.f90		oblique_factor.o
+Rproxyft.o		ptbeta.c
+bifact_latupdate.f90	ptbeta.o
+bifact_latupdate.o	qnorms.f90
+bifct_proxynllk.f90	qnorms.o
+bifct_proxynllk.o	student_t.f90
+ccopderiv.f90		student_t.o
+]0;~/Desktop/FactorModels/src[?1034hXinyaodeMacBook-Pro:src xinyaofan$ gfortran -fpic - c r[Kr[KRproxyft.o[Kf99[K0
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ fo[K[Kgfortran -shared  -o 1fact.O [K[Ko latupdate.o bifact_latupdate.o bifct_prooxynllk.o oblique_factor.o ccopderiv.o ptbeta.o 2derrivs.o ob[K[KRproxyft.o student_t.o qnorms.o 
+]0;~/Desktop/FactorModels/src[?1034hXinyaodeMacBook-Pro:src xinyaofan$ [KXinyaodeMacBook-Pro:src xinyaofan$ 吃的[K[Kcd ..
+]0;~/Desktop/FactorModelsXinyaodeMacBook-Pro:FactorModels xinyaofan$ cd .. [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K.
+]0;~/DesktopXinyaodeMacBook-Pro:Desktop xinyaofan$ cd tests/
+]0;~/Desktop/testsXinyaodeMacBook-Pro:tests xinyaofan$ ld[Ks
+2derivs.f90		test_bifactor.R
+Rproxyft.f90		test_oblique.R
+ccopderiv.f90		test_onefactor.R
+qnorms.f90		test_onefactweak.R
+student_t.f90
+]0;~/Desktop/testsXinyaodeMacBook-Pro:tests xinyaofan$ gfortran -fp ic [K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[KXinyaodeMacBook-Pro:tests xinyaofan$ gfortran -fpic -c 2derivs.f90  r[KRproxyft.f90 student_t.f90 qnorms.f90 
+]0;~/Desktop/testsXinyaodeMacBook-Pro:tests xinyaofan$ gfortran -sah[K[Khated [K[K[K[Kred -o mylib.so  2derivs.o p[KRproxyft.o student_t.o qnorms.o
+Undefined symbols for architecture x86_64:
+  "_ccopderiv_", referenced from:
+      _ft2_ in Rproxyft.o
+ld: symbol(s) not found for architecture x86_64
+collect2: error: ld returned 1 exit status
+]0;~/Desktop/testsXinyaodeMacBook-Pro:tests xinyaofan$ gfortran -shared -o mylib.so 22derivs.o Rproxyft.o student_t.o qnorms.o[A[C[C[C[C[C[Cfpic -c 2derivs.f90 [2PRproxyft.f90 student_t.f90 qnorms.f90 cop[K[Kcopderiv.f90 
+]0;~/Desktop/testsXinyaodeMacBook-Pro:tests xinyaofan$ gfortran -fpic -c 2derivs.f90  Rproxyft.f90 student_t.f90 qnorms.f90 ccopderiv.f90 [Ashared -o mylib.so 2[12Pderivs.o Rproxyft.o student_t.o qnorms.o ccopderiv.o
+Undefined symbols for architecture x86_64:
+  "_pt_", referenced from:
+      _ctderivs_ in ccopderiv.o
+ld: symbol(s) not found for architecture x86_64
+collect2: error: ld returned 1 exit status
+]0;~/Desktop/testsXinyaodeMacBook-Pro:tests xinyaofan$ gfortran -shared -o mylib.so 22derivs.o Rproxyft.o student_t.o qnorms.o ccopderiv.o ptbeta.o 
+]0;~/Desktop/FactorModels/src[?1034hXinyaodeMacBook-Pro:src xinyaofan$ [KXinyaodeMacBook-Pro:src xinyaofan$ gfro[K[Kortran -p[Kfpic -c E[KRprooxyft.O[Ko[Kf90
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ f[Kgfortran -fpic -c Rprooxyft.f90[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[Kshared -o 2 derivs.o ccopderiv.o ptbeta.o student_t.o Rproxyft.o 
+Undefined symbols for architecture x86_64:
+  "_lcop2derivt_", referenced from:
+      _ft2_ in Rproxyft.o
+  "_qnorms_", referenced from:
+      _qt_ in student_t.o
+ld: symbol(s) not found for architecture x86_64
+collect2: error: ld returned 1 exit status
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfortran -shared -o 2dderivs.o ccopderiv.o ptbeta.o student_t.o Rproxyft.o qnorrms.o cc[K[K
+Undefined symbols for architecture x86_64:
+  "_lcop2derivt_", referenced from:
+      _ft2_ in Rproxyft.o
+ld: symbol(s) not found for architecture x86_64
+collect2: error: ld returned 1 exit status
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfortran -shared myli b.so 2derivs.o co[Kcopderiv.o ptbeta.o student_t.o Rproxyft..o qnorms.o
+gfortran: error: mylib.so: No such file or directory
+]0;~/Desktop/FactorModels/srcXinyaodeMacBook-Pro:src xinyaofan$ gfortran -shared mylibb.so 2derivs.o ccopderiv.o ptbeta.o student_t.o Rproxyft..o qnorms.o[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K -o m ylib.so w[K2derivs.o f[Kccopderiv.o ptbeta.o student_t.o Rproxyyft.o qnorms.o
+]0;~/Desktop/FactorModels/src[?1034hXinyaodeMacBook-Pro:src xinyaofan$ 

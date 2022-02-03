@@ -1,0 +1,37 @@
+#r version for check fortran code latupdate2
+
+lat=rep(NA,n)
+for(i in 1:n){
+	uvec=udata[i,]
+	val=rep(0,25)
+	for(j in 1:d){
+		jj=c(2*j-1,2*j)
+		cpar=th[jj]
+		for(iq in 1:25){
+			if(fam[j]==4){
+			lpdf=log(BiCopPDF(u1=uvec[j],u2=xl[iq],
+								 family=4,par=cpar[1],par2=0))
+			}else if(fam[j]==7){
+				lpdf=log(BiCopPDF(u1=uvec[j],u2=xl[iq],family=7,par=cpar[1],par2=cpar[2]))
+			}else if(fam[j]==2){
+				lpdf=log(BiCopPDF(u1=uvec[j],u2=xl[iq],
+													family=2,
+													par=cpar[1],par2=cpar[2]))
+			}else if(fam[j]==5){
+				lpdf=log(BiCopPDF(u1=uvec[j],u2=xl[iq],
+													family=5,
+													par=cpar[1],par2=0))
+			}
+
+			val[iq]=val[iq]+lpdf
+		}
+	}
+  tem=exp(val)
+	num=wl*tem*xl
+	dem=wl*tem
+	lat[i]=sum(num)/sum(dem)
+	print(i)
+}
+lat2=uscore(lat)
+mean(abs(lat2-vlat))
+#0.02616117

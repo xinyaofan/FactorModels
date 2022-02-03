@@ -1,0 +1,103 @@
+# empirical version of zeta, including regression for the limit
+# extracted from David's code
+
+#Sample zeta alpha. rk=T means use ranks (uscore)
+ztalp.emp=function(dat,alp,rk=T,lowtail=F)
+{ if(rk) dat=uscore(dat)
+  if(lowtail) dat=1-dat
+  nu=.5*mean(abs(dat[,1]^alp-dat[,2]^alp))
+  theta=(alp+alp*(alp+1)*nu)/(alp-(alp+1)*nu)
+  return(2-theta)
+}
+
+#========================================
+#Regression approach to estimate lambda_U
+#========================================
+#assuming linear rate: 1/a for L(a) (regression M1)
+afunc11=function(p,mat,w)
+{ if(p[1]<0 | p[1]>1) { return(1e100);} 
+  return(mean(((mat[,2]-p[2]/mat[,1]-p[1])^2)/w))
+}
+
+#rate (p[3]) is estimated (regression M2)
+afunc11b=function(p,mat,w)
+{ if(p[3]<0 | p[3]>1 | p[1]<0) { return(1e100);} 
+  return(mean(((mat[,2]-p[2]/(mat[,1])^p[3]-p[1])^2)/w))
+}
+
+#increasing measures => we only need to estimate 1 par: L(a)=(2-2*p)+(2*p-4*p^2)/a (regression M3)
+afunc22=function(p,mat,w) 
+{ if(p<.5 | p>1) { return(1e100) }
+  return(mean(((mat[,2]-(2*p-4*p*p)/(mat[,1]+1-2*p)-(2-2*p))^2)/w))
+}
+
+#Plot zeta_a against a (a vector)
+#If inverse=T, plot zeta_a against 1/a
+plotza=function(dat,a,ylim=c(0,1),inverse=F)
+{ y=rep(NA,length(a)); u1=dat[,1]; u2=dat[,2]
+  for(j in 1:length(a)) y[j]=2+a[j]*(1-(a[j]/(a[j]+1)-mean(.5*abs(u1^a[j]-u2^a[j])))^(-1))
+  if(!inverse) plot(a,y,xlab="a",ylab="zeta_a",ylim=ylim)
+  if(inverse) plot(1/a,y,xlab="1/a",ylab="zeta_a",ylim=ylim)
+}
+
+# eps: tolerance for rate parameter in method 2; non-linear (use method 2) if rate < 1-eps
+# semictol: tolerance for exceedance of normal semicorrelation to treat as tail dependent
+
+# udat are ranked uscores if rk=T
+zlimemp=function(u1,u2,lowtail=F,eps=0.1,semictol=0.1,rk=F)
+{ if(!rk)
+  { N=length(u1)
+    u1=(rank(u1)-.5)/N;
+    u2=(rank(u2)-.5)/N;
+  }
+  if(lowtail) { u1=1-u1; u2=1-u2 }
+  #u1=udat[,1]; u2=udat[,2]
+  a=10:20 #seq(10,20,by=0.1); 
+  b=rep(0,length(a)); 
+  for(j in 1:length(a))
+  { b[j]=2+a[j]*(1-(a[j]/(a[j]+1)-mean(.5*abs(u1^a[j]-u2^a[j])))^(-1)); }
+  # check that above is same as ztalp.emp(udat,a[j],rk=F,lowtail)
+  #print(cbind(a,b))
+  ee1=nlm(afunc11,p=c(0,1),mat=cbind(a,b),w=a)
+  ee2=nlm(afunc11b,p=c(0,1,0.9),mat=cbind(a,b),w=a^0.5)
+  ee3=nlm(afunc22,p=.8,mat=cbind(a,b),w=a)
+  est1=ee1$estimate;
+  est2=ee2$estimate;
+  est3=ee3$estimate;
+  #cat("est1", est1, "\n")
+  #cat("est2", est2, "\n")
+  #cat("est3", est3, "\n")
+  # could add a plot here
+  #Decide which estimate to use (zeta)
+  ooa=1/a; lmobj=lm(b~ooa); coeff=summary(lmobj)$coefficients
+  semic=semicor(nscore(cbind(u1,u2)))
+  scup=semic[3]; scnorm=bvnsemic(semic[1])
+  #cat("semic:", scup, scnorm,"\n")
+  if(coeff[2,1]<0)
+  { #b vs 1/a is decreasing, i.e. increasing to limit
+    estpar=2-2*est3; estimator=3 # method 3 in paper
+  } 
+  else 
+  { if(ee2$estimate[3] >= 1-eps | scup-scnorm > semictol)
+    { #can assume linearly increasing, method 1
+      estpar=est1[1]; estimator=1
+    } 
+    else 
+    { #curved increasing, method 2
+      estpar=est2[1]; estimator=2
+    }
+  }
+  #cat("lmU: ", estimator, estpar,"\n")
+  estpar
+}
+
+
+#set.seed(123)
+#N=500
+#u1=runif(N);
+#u2=qcond(runif(N),u1,cpar);
+#convert to uniform scores (marginals are usually not known)
+#u1=(rank(u1)-.5)/N;
+#u2=(rank(u2)-.5)/N;
+#out= zlimemp(u1,u2,lowtail=F,eps=0.1,semictol=0.1,rk=T)
+#out2= zlimemp(u1,u2,lowtail=T,eps=0.1,semictol=0.1,rk=T)

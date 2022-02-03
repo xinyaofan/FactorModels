@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1643926841777.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2136503138",
+    "id" : "C8DA75F4",
+    "lastKnownWriteTime" : 1620911239,
+    "last_content_update" : 1620911239,
+    "path" : "~/2021fall/proxy_project/FactorModels/R/onefact.R",
+    "project_path" : "R/onefact.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

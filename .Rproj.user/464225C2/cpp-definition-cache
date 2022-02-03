@@ -1,0 +1,71 @@
+[
+    {
+        "definitions" : [
+            {
+                "column" : 8,
+                "file" : "/Users/xinyaofan/Desktop/FactorModels/src/ptbeta.c",
+                "kind" : 6,
+                "line" : 58,
+                "name" : "pbetab(double, double, double, double)",
+                "parent_name" : "",
+                "usr" : "c:@F@pbetab#d#d#d#d#"
+            },
+            {
+                "column" : 15,
+                "file" : "/Users/xinyaofan/Desktop/FactorModels/src/ptbeta.c",
+                "kind" : 6,
+                "line" : 122,
+                "name" : "incbcf(double, double, double)",
+                "parent_name" : "",
+                "usr" : "c:ptbeta.c@F@incbcf#d#d#d#"
+            },
+            {
+                "column" : 15,
+                "file" : "/Users/xinyaofan/Desktop/FactorModels/src/ptbeta.c",
+                "kind" : 6,
+                "line" : 177,
+                "name" : "incbd(double, double, double)",
+                "parent_name" : "",
+                "usr" : "c:ptbeta.c@F@incbd#d#d#d#"
+            },
+            {
+                "column" : 15,
+                "file" : "/Users/xinyaofan/Desktop/FactorModels/src/ptbeta.c",
+                "kind" : 6,
+                "line" : 236,
+                "name" : "pseries(double, double, double, double)",
+                "parent_name" : "",
+                "usr" : "c:ptbeta.c@F@pseries#d#d#d#d#"
+            },
+            {
+                "column" : 8,
+                "file" : "/Users/xinyaofan/Desktop/FactorModels/src/ptbeta.c",
+                "kind" : 6,
+                "line" : 265,
+                "name" : "lbeta(double, double)",
+                "parent_name" : "",
+                "usr" : "c:@F@lbeta#d#d#"
+            },
+            {
+                "column" : 8,
+                "file" : "/Users/xinyaofan/Desktop/FactorModels/src/ptbeta.c",
+                "kind" : 6,
+                "line" : 268,
+                "name" : "pbeta(double, double, double)",
+                "parent_name" : "",
+                "usr" : "c:@F@pbeta#d#d#d#"
+            },
+            {
+                "column" : 8,
+                "file" : "/Users/xinyaofan/Desktop/FactorModels/src/ptbeta.c",
+                "kind" : 6,
+                "line" : 271,
+                "name" : "pt_(double *, double *)",
+                "parent_name" : "",
+                "usr" : "c:@F@pt_#*d#S0_#"
+            }
+        ],
+        "file" : "/Users/xinyaofan/Desktop/FactorModels/src/ptbeta.c",
+        "file_last_write" : 1619337674
+    }
+]

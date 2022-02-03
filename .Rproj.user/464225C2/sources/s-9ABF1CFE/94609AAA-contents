@@ -1,0 +1,249 @@
+library(FactorModels)
+library(VineCopula)
+library(CopulaModel)
+library(psych)
+#'nsize simulation size
+#'n sample size
+#'d data dimension
+#'thlow lower bound for theta
+#'thupp upper bound for theta
+gl=gausslegendre(25)
+xl=gl$nodes
+wl=gl$weights
+setwd("/Users/xinyaofan/Desktop/aaaaaa")
+dyn.load("mylib4.so")
+is.loaded("gumproxybifact")
+
+#' approximate negative log-likelihood for bi-factor
+#'@description approximate negtive loglikielihood for bi-factor copula model with
+#'all linking copulas Gumbel
+#'@param udata input data in the u-scale. N*D
+#'@param th parameters in the bi-factor model, vector of 2*D length(if all the
+#'linking copulas are one-parameters copula)
+#'@param vlat proxies of the latent variables in the model
+#'@param grsize group size in the model
+#'@return nllk negative log-likelihood
+#'@export
+#'
+f90bifctGumbelProxynllk=function(th,dstruct,iprint=F){
+	n=nrow(udata)
+	npar=length(th)
+	grsize=dstruct$grsize
+	mgrp=length(grsize)
+	dvar=sum(grsize)
+	vlat=dstruct$vlat
+	udata=dstruct$udata
+	#if(!is.loaded("gumproxynllk"))  dyn.load("./libs/FactorModels.so")
+	out=.Fortran("gumproxybifact",
+							 as.integer(npar),as.double(th),as.integer(mgrp),as.integer(n),as.integer(dvar),
+							 as.integer(grsize),as.double(udata),as.double(vlat),
+							 nllk=as.double(0.),grad=rep(0.0,npar),
+							 hess=matrix(0.0,npar,npar))
+	return(list("fnval"=out$nllk,"grad"=out$grad,"hess"=out$hess))
+}
+
+proxyBifact<-function(udata,grsize,start,xl,wl,LB,UB,iprint){
+	n=nrow(udata)
+	d=ncol(udata)
+	mgrp=length(grsize)
+	#compute regression factor scores
+	d=sum(grsize)
+	dvar=2*d
+	param_optim=mvtbifact(tdata=nscore(udata),
+												start=start,grsize=grsize,
+												df=201,prlevel=0,full=T)$estimate
+	param_optim=matrix(param_optim,d,mgrp+1)
+	d1=grsize[1]
+	mgrp=length(grsize)
+	pcest=matrix(0,d,mgrp+1)
+	pcest[,1]=param_optim[,1]
+	gp=c(0,cumsum(grsize))
+	for(j in 1:mgrp){
+		jj=c((gp[j]+1):gp[j+1])
+		pcest[jj,j+1]=param_optim[jj,2]
+	}
+	loadest=pcor2load(pcest)
+	psi=diag(1-apply(loadest^2,1,sum))
+	apa=t(loadest)%*%solve(psi)%*%loadest
+
+
+	values=eigen(apa)$values
+	cond=max(values)/min(values)
+	cat("condition number of apa matrix\n")
+	print(cond)
+
+	pc=c(pcest)[c(pcest)!=0]
+	reg_scores=factor.scores(x=nscore(udata),
+													 f=loadest,
+													 method="Thurstone")$scores #regression
+
+	start=BiCopTau2Par(family=4, BiCopPar2Tau(family=1,par=pc))
+
+	#exact approach
+	dstrgum=list(data=udata,copname="gumbel",quad=gl,
+							 repar=0,grsize=grsize,pdf=0)
+	LB=rep(1,2*d)
+	UB=rep(15,2*d)
+	mlex1=pdhessminb(param=start,f90str2nllk,
+									 ifixed=rep(FALSE,dvar),
+									 dstrgum,
+									 LB=LB, UB=UB,
+									 mxiter=30, eps=5.e-5,iprint=TRUE)$parmin
+
+
+	fs=uscore(reg_scores)
+
+	dstruct=list(udata=udata,vlat=fs,grsize=grsize)
+	mlpx1=pdhessminb(param=start,f90bifctGumbelProxynllk,
+									 ifixed=rep(FALSE,dvar),
+									 dstruct,LB=LB,UB=UB,
+									 mxiter=30,eps=1.e-4,iprint=T)$parmin
+
+	#update the factor scores
+	proxyNew=latUpdateBifctGumbel(udata=udata,
+																th=mlpx1,grsize,
+																nq=25,xl,wl)
+	proxyNew=uscore(cbind(proxyNew$v0,proxyNew$vg))
+	dstruct=list(udata=udata,vlat=proxyNew,
+							 grsize=grsize)
+	mlpx2=pdhessminb(param=mlpx1,f90bifctGumbelProxynllk,
+									 ifixed=rep(FALSE,dvar),
+									 dstruct,LB=LB,UB=UB,
+									 mxiter=30,eps=1.e-4,iprint=T)$parmin
+
+
+	return(list(mlex1=mlex1,mlpx1=mlpx1,mlpx2=mlpx2,
+							proxyMean=fs,proxyNew=proxyNew,
+							condNum=cond))
+}
+
+
+
+
+
+simBifctgum<-function(nsize,grsize,n,seed=1234){
+	set.seed(seed)
+	result=matrix(NA,nsize,20)
+	res_list=list()
+	vlat_list=list()
+	fs_list=list()
+	proxyNew_list=list()
+	udata_list=list()
+	d=sum(grsize)
+	dvar=2*d
+	condNum=rep(NA,nsize)
+	parbi_list<-list()
+	for(k in 1:nsize){
+		parbi=c(runif(d,1.25,2.5),runif(d,1.67,5)) #parameters length=200
+		data=simbifact2(n=n,grsize=grsize,cop=3,parbi)
+		udata=data$zdata
+		start=c(rep(0.6,d),rep(0.5,d))
+		parbi_list[[k]]=parbi
+    udata_list[[k]]=udata
+    tryCatch({
+		out2=proxyBifact(udata=udata,grsize,start,xl,wl)
+		condNum[k]=out2$condNum
+    },error=function(e){
+    	out2=list()
+      mlex1=rep(NA,2*d)
+      proxyMean=matrix(NA,1000,1000)
+      proxyNew=matrix(NA,1000,1000)
+      mlpx2=rep(NA,2*d)
+      mlpx3=rep(NA,2*d)
+      out2$mlex1=mlex1
+      out2$proxyMean=proxyMean
+      out2$proxyNew=proxyNew
+      out2$mlpx2=mlpx2
+      out2$mlpx3=mlpx3
+    }
+    	)
+		mlex1=out2$mlex1
+		proxyMean=out2$proxyMean
+		proxyNew=out2$proxyNew
+		mlpx2=out2$mlpx1
+		mlpx3=out2$mlpx2
+
+		fs_list[[k]]=proxyMean
+		proxyNew_list[[k]]=proxyNew
+
+		vlat=cbind(data$v0,data$vg)
+
+		mlex1_loc=mlex1[(d+1):dvar]
+		mlex1_glob=mlex1[1:d]
+		mlpx2_loc=mlpx2[(d+1):dvar]
+		mlpx2_glob=mlpx2[1:d]
+		mlpx3_loc=mlpx3[(d+1):dvar]
+		mlpx3_glob=mlpx3[1:d]
+		par_glob=parbi[1:d]
+		par_loc=parbi[(d+1):dvar]
+
+		tau1=BiCopPar2Tau(family=4,par=mlex1)
+		tau2=BiCopPar2Tau(family=4,par=mlpx2)
+		tau3=BiCopPar2Tau(family=4,par=mlpx3)
+
+		tau1_glob=tau1[1:d]
+		tau2_glob=tau2[1:d]
+		tau3_glob=tau3[1:d]
+
+		tau1_loc=tau1[(d+1):dvar]
+		tau2_loc=tau2[(d+1):dvar]
+		tau3_loc=tau3[(d+1):dvar]
+
+		res=list( "v1"=proxyMean,"v2"=proxyNew,"vlat"=vlat,
+							"theta1"=mlex1,"theta2"=mlpx2,"theta3"=mlpx3,
+							"mse1_glob"=mean((mlex1_glob-par_glob)^2),
+							"mse2_glob"=mean((mlpx2_glob-par_glob)^2),
+							"mse3_glob"=mean((mlpx3_glob-par_glob)^2),
+							"mae1_glob"=mean(abs(mlex1_glob-par_glob)),
+							"mae2_glob"=mean(abs(mlpx2_glob-par_glob)),
+							"mae3_glob"=mean(abs(mlpx3_glob-par_glob)),
+							"mse1_loc"=mean((mlex1_loc-par_loc)^2),
+							"mse2_loc"=mean((mlpx2_loc-par_loc)^2),
+							"mse3_loc"=mean((mlpx3_loc-par_loc)^2),
+							"mae1_loc"=mean(abs(mlex1_loc-par_loc)),
+							"mae2_loc"=mean(abs(mlpx2_loc-par_loc)),
+							"mae3_loc"=mean(abs(mlpx3_loc-par_loc)),
+							"dif1_loc"=mean(abs(mlpx2_loc-mlex1_loc)),
+							"dif2_loc"=mean(abs(mlpx3_loc-mlex1_loc)),
+							"dif1_glob"=mean(abs(mlpx2_glob-mlex1_glob)),
+							"dif2_glob"=mean(abs(mlpx3_glob-mlex1_glob)),
+							"tau1_loc"=mean(abs(tau1_loc-tau2_loc)),
+							"tau2_loc"=mean(abs(tau1_loc-tau3_loc)),
+							"tau1_glob"=mean(abs(tau1_glob-tau2_glob)),
+							"tau2_glob"=mean(abs(tau1_glob-tau3_glob)))
+		res_list[[k]]=res
+		vlat_list[[k]]=vlat
+		result[k,]=c(res$mse1_glob,res$mse2_glob,res$mse3_glob,
+								 res$mae1_glob,res$mae2_glob,res$mae3_glob,
+								 res$mse1_loc,res$mse2_loc,res$mse3_loc,
+								 res$mae1_loc,res$mae2_loc,res$mae3_loc,
+								 res$dif1_glob,res$dif2_glob,
+								 res$tau1_glob,res$tau2_glob,
+								 res$dif1_loc,res$dif2_loc,
+								 res$tau1_loc,res$tau2_loc)
+		print(k)
+	}
+	colnames(result)=c("mse1_glob","mse2_glob","mse3_glob",
+										 "mae1_glob","mae2_glob","mae3_glob",
+										 "mse1_loc","mse2_loc","mse3_loc",
+										 "mae1_loc","mae2_loc","mae3_loc",
+										 "dif1_glob","dif2_glob",
+										 "tau1_glob","tau2_glob",
+										 "dif1_loc","dif2_loc",
+										 "tau1_loc","tau2_loc")
+	return(list(result=result,res=res_list,
+							vlat_list=vlat_list,
+							condNum=condNum,fs_list=fs_list,
+							proxyNew=proxyNew_list,
+							parbi_list=parbi_list))
+}
+
+
+res25=simBifctgum(nsize=1000,grsize=rep(25,3),
+									n=1000,seed=1234)
+save(file="res25_gum.RData",res25)
+
+res20=simBifctgum(nsize=1000,grsize=rep(20,3),
+									n=1000,seed=1234)
+save(file="res20_gum.RData",res20)
+

@@ -1,0 +1,66 @@
+#r version for check fortran code latupdate2
+
+lat=rep(NA,n)
+for(i in 1:n){
+	uvec=udata[i,]
+	val=rep(0,25)
+	for(j in 1:d){
+		jj=c(2*j-1,2*j)
+		cpar=th[jj]
+		for(iq in 1:25){
+			if(fam[j]==4){
+			lpdf=log(BiCopPDF(u1=uvec[j],u2=xl[iq],
+								 family=4,par=cpar[1],par2=0))
+			}else if(fam[j]==7){
+				lpdf=log(BiCopPDF(u1=uvec[j],u2=xl[iq],family=7,par=cpar[1],par2=cpar[2]))
+			}else if(fam[j]==2){
+				lpdf=log(BiCopPDF(u1=uvec[j],u2=xl[iq],
+													family=2,
+													par=cpar[1],par2=cpar[2]))
+			}else if(fam[j]==5){
+				lpdf=log(BiCopPDF(u1=uvec[j],u2=xl[iq],
+													family=5,
+													par=cpar[1],par2=0))
+			}
+
+			val[iq]=val[iq]+lpdf
+		}
+	}
+  tem=exp(val)
+	num=wl*tem*xl
+	dem=wl*tem
+	lat[i]=sum(num)/sum(dem)
+	print(i)
+}
+lat2=uscore(lat)
+mean(abs(lat2-vlat))
+#0.02616117
+
+d=90
+mlpx2_mat=matrix(NA,1000,2*d)
+proxyNew_list<-list()
+for(k in 1:1000){
+	mlpx1=res30_2$mlpx1_mat[k,]
+	udata=res30_2$udata_list[[k]]
+	fam=res30_2$fam_mat[k,]
+	proxyNew=latUpdateOnefct2(th=mlpx1,
+														udata=udata,
+														nq=25,xl=xl,wl=wl,
+														family=fam)
+	proxyNew=uscore(proxyNew)
+  proxyNew_list[[k]]=proxyNew
+
+  LB=res30_2$LB_list[[k]]
+  UB=res30_2$UB_list[[k]]
+  start=res30_2$start_list[[k]]
+  ifixed=res30_2$ifixed_list[[k]]
+
+	dstruct=list(udata=udata,lat=proxyNew,fam=fam)
+	mlpx2=pdhessminb(start,f901fproxynllk2,
+									ifixed =ifixed,
+									dstruct=dstruct,
+									LB=LB,UB=UB,
+									mxiter=30,eps=1.e-4,iprint=T)$parmin
+	mlpx2_mat[k,]=mlpx2
+	print(k)
+}

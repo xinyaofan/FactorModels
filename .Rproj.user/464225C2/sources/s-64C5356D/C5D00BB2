@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1643926533116.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "C5D00BB2",
+    "lastKnownWriteTime" : 1643926724,
+    "last_content_update" : 1643926724373,
+    "path" : "~/2021fall/proxy_project/FactorModels/R/simdata.R",
+    "project_path" : "R/simdata.R",
+    "properties" : {
+        "cursorPosition" : "170,29",
+        "scrollLine" : "191"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
