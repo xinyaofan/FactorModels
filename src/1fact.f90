@@ -117,12 +117,12 @@ subroutine onefact2(param,d,n,udata,lat,fam,nllk,lgrad,lhess)
       jj=(/2*j-1,2*j/)
       call lcop2derivt(lat(i),uvec(j),param(:,j),fam(j),lpdf(j),der1(:,j),&
       der2(:,j),lder1u,lder2u,ldermixuu,lder1v,lder2v,lder2uv,ldermixvv)
-      grad(jj)=grad(jj)+der1(:,j)
-      !lgrad(jj)=lgrad(jj)+der1(:,j)
+
+      lgrad(jj)=lgrad(jj)+der1(:,j)
       !print*,lgrad(jj)
       tmat(1,1)=der2(1,j); tmat(2,2)=der2(3,j);
       tmat(1,2)=der2(2,j); tmat(2,1)=der2(2,j);
-      hess(jj,jj)=hess(jj,jj)+tmat
+      lhess(jj,jj)=lhess(jj,jj)+tmat
     end do
   
     ljpdf=sum(lpdf)

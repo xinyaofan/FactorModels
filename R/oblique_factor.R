@@ -65,9 +65,7 @@ proxyOblique<-function(udata,grsize,fam,start,LB,UB,xl,wl,iprint){
 		proxyMean[,i]=uscore(apply(udata[,((gp[i]+1):gp[i+1])],1,mean))
 	}
 	dstruct=list(udata=udata,grsize=grsize,lat=proxyMean,xl=xl,wl=wl)
-	out1=pdhessminb(param=start,f90str1proxynllk,
-									ifixed=rep(FALSE,npar),
-									dstruct,
+	out1=pdhessminb(param=start,f90str1proxynllk,ifixed=rep(FALSE,npar), dstruct,
 									LB=LB,UB=UB, mxiter=30, eps=5.e-5,iprint=T)
   mlpx1=out1$parmin
 
@@ -80,7 +78,7 @@ proxyOblique<-function(udata,grsize,fam,start,LB,UB,xl,wl,iprint){
 	}
 
 	dstruct=list(udata=udata,grsize=grsize,lat=proxyNew,xl=xl,wl=wl)
-	out2=pdhessminb(param=start,f90str1proxynllk,ifixed=rep(FALSE,npar), dstruct,
+	out2=pdhessminb(param=mlpx1,f90str1proxynllk,ifixed=rep(FALSE,npar), dstruct,
 									LB=LB, UB=UB, mxiter=30, eps=5.e-5,iprint=T)
   mlpx2=out2$parmin
 	return(list(mlpx1=mlpx1,mlpx2=mlpx2,proxyMean=proxyMean,proxyNew=proxyNew))

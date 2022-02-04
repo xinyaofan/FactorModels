@@ -2,8 +2,7 @@
 % Please edit documentation in R/onefact.R
 \name{proxy1fct}
 \alias{proxy1fct}
-\title{parameter estimation using proxy method in 1-factor copula model
-with all copula families in the same family}
+\title{parameter estimation using proxy method}
 \usage{
 proxy1fct(udata, family, start, LB, UB, xl, wl, iprint)
 }

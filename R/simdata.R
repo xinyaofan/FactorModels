@@ -89,6 +89,61 @@ sim1fact3<-function(n,d,param,fam){
 
 
 
+
+
+
+
+
+#'simulate data from 1-factor with weak res dependence
+#'@description simulate data from 1-factor with weak residual
+#'depdence, the weak dependence is modeled by 1-truncated
+#'D-vine
+#'@param n sample size
+#'@param d dimension
+#'@param thlow1 lower bound for param in tree1
+#'@param thupp1 upper bound for param in tree1
+#'@param thlow2 lower bound for param in res tree
+#'@param thupp2 upper bound for param in res tree
+#'@param fam1 copula family in T1
+#'@param fam2 copula family in residual tree
+#'@return simdata simulate data in u-scale
+#'@return thv paramters in the model
+#'@export
+#'
+simWeakRes<-function(n,d,thlow1=1.67,thupp1=5.0,
+										 thlow2=0.95,thupp2=2.95,
+										 fam1=4,fam2=5){
+	d1=d+1
+	Matrix <-matrix(NA,d1,d1)
+	Matrix[1,]<-rep(d1,d1)
+	m=Dvinearray(d1-1)
+	flag=lower.tri(m,F)
+	m[flag]<-0
+	Matrix[2:d1,2:d1]<-m
+	Matrix[is.na(Matrix)]<-0
+	family<-c(0,rep(fam1,d1-1),0,0,rep(fam2,d1-2),rep(0,(d1-2)*d1))
+	family <- matrix(family, d1, d1,T)
+	thv1=runif(d1-1,thlow1,thupp1)
+	thv2=runif(d1-2,thlow2,thupp2)
+	thv=c(thv1,thv2)
+	par<-c(0,thv1,0,0,thv2,rep(0,(d1-2)*d1))
+	par<-matrix(par,d1,d1,T)
+	par2 <- matrix(0, d1, d1)
+	RVM <- RVineMatrix(Matrix = Matrix, family = family,
+										 par = par, par2 = par2,
+										 names = paste0("V",c(1:d1)))
+	simdata <- RVineSim(n, RVM)
+	return(list(simdata=simdata,thv=thv))
+}
+
+
+
+
+
+
+
+
+
 #'simulate data from bi-factor copula model
 #'@description simulate data from bi-factor copula model
 #'@param nn sample size
@@ -229,77 +284,3 @@ simnestfact2=function(nn,grsize,cop1,cop2,param){
 	}
 	return(list(zdata=zdata,lat0=z0,lat=z))
 }
-
-
-
-
-# sim1fact4<-function(n,d,param,fam){
-# 	vv = runif(n)
-# 	yy = matrix(0, n, d)
-#
-# 	for (j in 1:d) {
-# 		jj=c(2*j-1,2*j)
-# 		 th = param[jj]
-# 			qq = runif(n)
-# 			if(fam[j]==4){
-# 				yy[,j]=qcondgum(qq, vv, th[1])
-# 			}else if(fam[j]==5){
-# 					yy[,j]=qcondfrk(qq,vv,th[1])
-# 			}else if(fam[j]==2){
-# 					yy[,j]=qcondbvtcop(qq,vv,cpar=th[1],df=5)
-# 				}
-# 		}
-#
-#
-# 	return(list("dat"=yy,"vlat"=vv))
-# }
-#
-
-#' #'simulate data from 1-factor with weak res dependence
-#' #'@description simulate data from 1-factor with weak residual
-#' #'depdence, the weak dependence is modeled by 1-truncated
-#' #'D-vine
-#' #'@param n sample size
-#' #'@param d dimension
-#' #'@param thlow1 lower bound for param in tree1
-#' #'@param thupp1 upper bound for param in tree1
-#' #'@param thlow2 lower bound for param in res tree
-#' #'@param thupp2 upper bound for param in res tree
-#' #'@param fam1 copula family in T1
-#' #'@param fam2 copula family in residual tree
-#' #'@return simdata simulate data in u-scale
-#' #'@return thv paramters in the model
-#' #'@export
-#' #'
-#' simWeakRes<-function(n,d,thlow1=1.67,thupp1=5.0,
-#' 										 thlow2=0.95,thupp2=2.95,
-#' 										 fam1=4,fam2=5){
-#' 	d1=d+1
-#' 	Matrix <-matrix(NA,d1,d1)
-#' 	Matrix[1,]<-rep(d1,d1)
-#' 	m=Dvinearray(d1-1)
-#' 	flag=lower.tri(m,F)
-#' 	m[flag]<-0
-#' 	Matrix[2:d1,2:d1]<-m
-#' 	Matrix[is.na(Matrix)]<-0
-#' 	family<-c(0,rep(fam1,d1-1),0,0,rep(fam2,d1-2),rep(0,(d1-2)*d1))
-#' 	family <- matrix(family, d1, d1,T)
-#' 	thv1=runif(d1-1,thlow1,thupp1)
-#' 	thv2=runif(d1-2,thlow2,thupp2)
-#' 	thv=c(thv1,thv2)
-#' 	par<-c(0,thv1,0,0,thv2,rep(0,(d1-2)*d1))
-#' 	par<-matrix(par,d1,d1,T)
-#' 	par2 <- matrix(0, d1, d1)
-#' 	RVM <- RVineMatrix(Matrix = Matrix, family = family,
-#' 										 par = par, par2 = par2,
-#' 										 names = paste0("V",c(1:d1)))
-#' 	simdata <- RVineSim(n, RVM)
-#' 	return(list(simdata=simdata,thv=thv))
-#' }
-#'
-#'
-#'
-#'
-#'
-#'
-

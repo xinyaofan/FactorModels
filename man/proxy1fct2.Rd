@@ -4,7 +4,7 @@
 \alias{proxy1fct2}
 \title{parameter estimation using proxy method}
 \usage{
-proxy1fct2(udata, fam, start, LB, UB, ifixed, xl, wl, iprint)
+proxy1fct2(udata, fam, start, LB, UB, xl, wl, iprint)
 }
 \arguments{
 \item{udata}{N*D data in u-scale}
@@ -17,9 +17,6 @@ now only allow 2: student-t, 4:gumbel  and 5: frank copulas}
 \item{LB}{upper bound for parameters, length d}
 
 \item{UB}{lower bound for parameters, length d}
-
-\item{ifixed}{if ifixed=T, the parameters at j-th position will be
-fixed}
 
 \item{xl}{Gaussian-Legendre points}
 

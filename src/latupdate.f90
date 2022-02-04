@@ -166,6 +166,36 @@ return
 end subroutine
 
 
+!latent update in one-factor copula model; different copula families are allowed
+
+subroutine latupdate2 (th,n,d,udata,nq,xl,wl,family,lat)
+  implicit none
+  integer n,nq,i,iq,j,d
+  double precision num,dem,lpdf
+  integer family(d)
+  double precision udata(n,d),th(d),wl(nq),xl(nq),uvec(d),val(nq),tem(nq),lat(n)
+  do i=1,n
+    uvec=udata(i,:)
+    val=0.0d0;
+    do j=1,d
+     do iq=1,nq
+     if (family(j)==4) then
+     call lgum(uvec(j),xl(iq),th(j),lpdf)
+     elseif(family(j)==5) then
+      call lfrk(uvec(j),xl(iq),th(j),lpdf)
+      elseif(family(j)==2) then
+      call lgau(uvec(j),xl(iq),th(j),lpdf)
+     end if
+     val(iq)=val(iq)+lpdf
+      end do
+    end do
+    tem=exp(val)
+    num=dot_product(wl,tem*xl)
+    dem=dot_product(wl,tem)
+    lat(i)=num/dem  
+  end do   
+return
+end subroutine
 
 
 !this functions returns the log-density of Gumbel copula

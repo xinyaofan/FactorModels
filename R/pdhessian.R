@@ -46,16 +46,15 @@ mxdif=max(abs(diff))
 iter=iter+1
 param=param-diff
 outb=0;
-if(any(param<LB) | any(param>UB)) outb=1;
+if(any(param<=LB) | any(param>=UB)) outb=1;
 if(is.infinite(fn$fnval) | is.nan(fn$fnval)) outb=1;
 if(any(is.infinite(fn$grad)) || any(is.nan(fn$grad))) outb=1;
 # modified NR to limit size of step to within bounds
 while(outb==1 | mxdif>bdd)
 { mxdif=mxdif/2.;
-  outb=0;
-  diff=diff/2;
-  param=param+diff;
-if(any(param<LB) | any(param>UB)) outb=1;
+outb=0;
+diff=diff/2; param=param+diff;
+if(any(param<=LB) | any(param>=UB)) outb=1;
 }
 # find a step size to ensure the objective fn decreases
 LB.ind= param<=LB +0.008
@@ -65,21 +64,17 @@ ifixed[UB.ind]=T
 dstruct$pdf=1; # positive definite
 fnnew=objfn(param,dstruct,F)$fnval;
 brkvr=0;
-
 while(fnold<=fnnew)
 { mxdif=mxdif/2.;
-	diff=diff/2.0;
- 	param=param+diff;
- 	fnnew = objfn(param,dstruct,F)$fnval;
-	brkvr=brkvr+1;
+diff=diff/2; param=param+diff;
+fnnew= objfn(param,dstruct,F)$fnval;
+brkvr=brkvr+1;
 if(brkvr>10)
 { print("break: step size is very small");
 	fnnew=fnold-1e-5; mxdif=eps-1e-5;
 }
 }
-
-if(iprint) { cat(iter, fn$fnval, mxdif, "\n")}
-	#cat(param)}
+if(iprint) { cat(iter, fn$fnval, mxdif,"\n") }
 }
 if(brk==0)
 { iconv=1;
@@ -98,6 +93,5 @@ invh=NA;
 isposdef=FALSE;
 }
 list(parmin=param,fnval=fnnew,invh=invh,iconv=iconv,iposdef=iposdef)
-
 }
 

@@ -13,6 +13,7 @@
 #' @return nllk negative log-likelihood
 #' @return grad gradient of nllk
 #' @return hessian matrix of nllk
+#' @export
 #'
 f901f1tnllk=function(param,dstruct,iprfn=FALSE){
 	udata=dstruct$data
@@ -55,7 +56,7 @@ f901f1tnllk=function(param,dstruct,iprfn=FALSE){
 #' @param iprfn print gradient and hessian if true
 #' @return nllk: approximate nllk; grad: gradient of nllk;
 #' hess: hessian matrix of nllk
-#'
+#' @export
 f901f1tproxynllk=function(param,dstruct,iprfn=FALSE){
 	udata=dstruct$data
 	edg1=dstruct$edg1
@@ -99,7 +100,7 @@ f901f1tproxynllk=function(param,dstruct,iprfn=FALSE){
 #'        mlpx2 estimated parameters from new proxy method
 #'        proxyMean mean verison of proxies
 #'        proxyNew  new proposed proxies
-#'
+#'@export
 proxy1fctweak<-function(udata,fam,start,LB,UB,xl,wl,iprint,ifixed){
 	d=ncol(udata)
 	proxyMean=uscore(apply(udata,1,mean)) #mean proxy
