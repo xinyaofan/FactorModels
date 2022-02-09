@@ -54,7 +54,7 @@ while(outb==1 | mxdif>bdd)
 { mxdif=mxdif/2.;
 outb=0;
 diff=diff/2; param=param+diff;
-if(any(param<=LB) | any(param>=UB)) outb=1;
+if(any(param<LB) | any(param>UB)) outb=1;
 }
 # find a step size to ensure the objective fn decreases
 LB.ind= param<=LB +0.008
