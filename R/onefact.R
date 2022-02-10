@@ -108,7 +108,7 @@ latUpdateOnefct2<- function(th,udata,nq,xl,wl,family) {
 	d=dim(udata)[2]
 	nq=length(xl)
 	#if(!is.loaded("latupdate"))  dyn.load("./libs/FactorModels.so")
-	out=.Fortran("latupdate2",as.double(th),as.integer(n),as.integer(d),
+	out=.Fortran("latupdate3",as.double(th),as.integer(n),as.integer(d),
 							 as.double(udata),as.integer(nq),as.double(xl),as.double(wl),
 							 as.integer(family),
 							 lat=rep(0,n),PACKAGE = "FactorModels")
