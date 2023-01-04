@@ -110,9 +110,7 @@ sim1fact3<-function(n,d,param,fam){
 #'@return thv paramters in the model
 #'@export
 #'
-simWeakRes<-function(n,d,thlow1=1.67,thupp1=5.0,
-										 thlow2=0.95,thupp2=2.95,
-										 fam1=4,fam2=5){
+simWeakRes<-function(n,d,thlow1=1.67,thupp1=5.0,thlow2=0.95,thupp2=2.95,fam1=4,fam2=5){
 	d1=d+1
 	Matrix <-matrix(NA,d1,d1)
 	Matrix[1,]<-rep(d1,d1)
@@ -129,9 +127,7 @@ simWeakRes<-function(n,d,thlow1=1.67,thupp1=5.0,
 	par<-c(0,thv1,0,0,thv2,rep(0,(d1-2)*d1))
 	par<-matrix(par,d1,d1,T)
 	par2 <- matrix(0, d1, d1)
-	RVM <- RVineMatrix(Matrix = Matrix, family = family,
-										 par = par, par2 = par2,
-										 names = paste0("V",c(1:d1)))
+	RVM <- RVineMatrix(Matrix = Matrix, family = family,par = par, par2 = par2, names = paste0("V",c(1:d1)))
 	simdata <- RVineSim(n, RVM)
 	return(list(simdata=simdata,thv=thv))
 }
