@@ -75,7 +75,8 @@ proxyOblique<-function(udata,grsize,fam,start,LB,UB,xl,wl,iprint){
 	for(i in 1:mgrp){
 		th_tem=mlpx1[((gp[i]+1+mgrp):(gp[i+1]+mgrp))]
 		proxyNew[,i]=uscore(latUpdateOnefct(th=th_tem,
-						    udata=udata[,((gp[i]+1):gp[i+1])],nq=25,xl=xl,wl=xl,family=fam))
+						    udata=udata[,((gp[i]+1):gp[i+1])],
+						    nq=25,xl=xl,wl=xl,family=fam))
 	}
 
 	dstruct=list(udata=udata,grsize=grsize,lat=proxyNew,xl=xl,wl=wl)
