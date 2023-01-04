@@ -16,9 +16,15 @@ f90bifctFrkProxynllk=function(udata,th,vlat,grsize){
 	dvar=sum(grsize)
 	#if(!is.loaded("frkproxynllk"))  dyn.load("./libs/FactorModels.so")
 	out=.Fortran("frkproxynllk",
-							 as.integer(npar),as.double(th),as.integer(mgrp),as.integer(n),as.integer(dvar),
-							 as.integer(grsize),as.double(udata),as.double(vlat),
-							 nllk=as.double(0.),PACKAGE = "FactorModels")
+		     as.integer(npar),
+		     as.double(th),
+		     as.integer(mgrp),
+		     as.integer(n),
+		     as.integer(dvar),
+		     as.integer(grsize),
+		     as.double(udata),
+		     as.double(vlat),
+		     nllk=as.double(0.),PACKAGE = "FactorModels")
 	out$nllk
 }
 
@@ -60,9 +66,6 @@ f90bifctGumbelProxynllk=function(udata,th,vlat,grsize){
 		     nllk=as.double(0.),PACKAGE = "FactorModels")
 	out$nllk
 }
-
-
-
 
 
 
