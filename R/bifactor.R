@@ -49,9 +49,15 @@ f90bifctGumbelProxynllk=function(udata,th,vlat,grsize){
 	dvar=sum(grsize)
 	#if(!is.loaded("gumproxynllk"))  dyn.load("./libs/FactorModels.so")
 	out=.Fortran("gumproxynllk",
-							 as.integer(npar),as.double(th),as.integer(mgrp),as.integer(n),as.integer(dvar),
-							 as.integer(grsize),as.double(udata),as.double(vlat),
-							 nllk=as.double(0.),PACKAGE = "FactorModels")
+		     as.integer(npar),
+		     as.double(th),
+		     as.integer(mgrp),
+		     as.integer(n),
+		     as.integer(dvar),
+		     as.integer(grsize),
+		     as.double(udata),
+		     as.double(vlat),
+		     nllk=as.double(0.),PACKAGE = "FactorModels")
 	out$nllk
 }
 
@@ -81,11 +87,19 @@ latUpdateBifctFrk=function(udata,th,grsize,nq,xl,wl){
 	nq=length(xl)
 	npar=2*dvar
 	#if(!is.loaded("latupdatebifact"))  dyn.load("./libs/FactorModels.so")
-	out=.Fortran("latupdatebifact",
-							 as.integer(npar),as.double(th),as.integer(mgrp),as.integer(dvar),as.integer(n),
-							 as.integer(grsize),as.double(udata),as.integer(nq),as.double(xl),as.double(wl),
-							 v0mat=rep(0,n),
-							 vgmat=matrix(0.0,nrow=n,ncol=mgrp),PACKAGE = "FactorModels")
+	out=.Fortran("latupdatebifact", 
+		     as.integer(npar),
+		     as.double(th),
+		     as.integer(mgrp),
+		     as.integer(dvar),
+		     as.integer(n),
+		     as.integer(grsize),
+		     as.double(udata),
+		     as.integer(nq),
+		     as.double(xl),
+		     as.double(wl),
+		     v0mat=rep(0,n),
+		     vgmat=matrix(0.0,nrow=n,ncol=mgrp),PACKAGE = "FactorModels")
 
 	return(list(v0=out$v0mat,vg=out$vgmat))
 }
@@ -118,10 +132,18 @@ latUpdateBifctGumbel=function(udata,th,grsize,nq,xl,wl){
 	npar=2*dvar
 	#if(!is.loaded("latupdatebifact2"))  dyn.load("./libs/FactorModels.so")
 	out=.Fortran("latupdatebifact2",
-							 as.integer(npar),as.double(th),as.integer(mgrp),as.integer(dvar),as.integer(n),
-							 as.integer(grsize),as.double(udata),as.integer(nq),as.double(xl),as.double(wl),
-							 v0mat=rep(0,n),
-							 vgmat=matrix(0.0,nrow=n,ncol=mgrp),PACKAGE = "FactorModels")
+		     as.integer(npar),
+		     as.double(th),
+		     as.integer(mgrp),
+		     as.integer(dvar),
+		     as.integer(n),
+		     as.integer(grsize),
+		     as.double(udata),
+		     as.integer(nq),
+		     as.double(xl),
+		     as.double(wl),
+		     v0mat=rep(0,n),
+		     vgmat=matrix(0.0,nrow=n,ncol=mgrp),PACKAGE = "FactorModels")
 
 	return(list(v0=out$v0mat,vg=out$vgmat))
 }
