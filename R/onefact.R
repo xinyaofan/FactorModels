@@ -48,11 +48,16 @@ f901fproxynllk2<-function(param,dstruct,iprint=F){
 	d=ncol(udata)
 	#call fortran function
 	#if(!is.loaded("onefact"))  dyn.load("./libs/FactorModels.so")
-	out=.Fortran("onefact2",as.double(param),as.integer(d),
-							 as.integer(n),as.double(udata),as.double(lat)
-							 ,as.integer(fam),
-							 nllk=as.double(0.),lgrad=rep(0.0,2*d),
-							 lhess=matrix(0.0,2*d,2*d),PACKAGE = "FactorModels")
+	out=.Fortran("onefact2",
+		     as.double(param),
+		     as.integer(d),
+		     as.integer(n),
+		     as.double(udata),
+		     as.double(lat),
+		     as.integer(fam),
+		     nllk=as.double(0.),
+		     lgrad=rep(0.0,2*d),
+		     lhess=matrix(0.0,2*d,2*d),PACKAGE = "FactorModels")
 	return(list("fnval"=out$nllk,"grad"=out$lgrad,"hess"=out$lhess))
 }
 
@@ -79,10 +84,16 @@ latUpdateOnefct<- function(th,udata,nq,xl,wl,family) {
 	d=dim(udata)[2]
 	nq=length(xl)
 	#if(!is.loaded("latupdate"))  dyn.load("./libs/FactorModels.so")
-	out=.Fortran("latupdate",as.double(th),as.integer(n),as.integer(d),
-							 as.double(udata),as.integer(nq),as.double(xl),as.double(wl),
-							 as.integer(family),
-							 lat=rep(0,n),PACKAGE = "FactorModels")
+	out=.Fortran("latupdate",
+		     as.double(th),
+		     as.integer(n),
+		     as.integer(d),
+		     as.double(udata),
+		     as.integer(nq),
+		     as.double(xl),
+		     as.double(wl),
+		     as.integer(family),
+		     lat=rep(0,n),PACKAGE = "FactorModels")
 	return(out$lat)
 }
 
@@ -108,10 +119,16 @@ latUpdateOnefct2<- function(th,udata,nq,xl,wl,family) {
 	d=dim(udata)[2]
 	nq=length(xl)
 	#if(!is.loaded("latupdate"))  dyn.load("./libs/FactorModels.so")
-	out=.Fortran("latupdate3",as.double(th),as.integer(n),as.integer(d),
-							 as.double(udata),as.integer(nq),as.double(xl),as.double(wl),
-							 as.integer(family),
-							 lat=rep(0,n),PACKAGE = "FactorModels")
+	out=.Fortran("latupdate3",
+		     as.double(th),
+		     as.integer(n),
+		     as.integer(d),
+		     as.double(udata),
+		     as.integer(nq),
+		     as.double(xl),
+		     as.double(wl),
+		     as.integer(family),
+		     lat=rep(0,n),PACKAGE = "FactorModels")
 	return(out$lat)
 }
 
@@ -146,15 +163,15 @@ proxy1fct<-function(udata,family,start,LB,UB,xl,wl,iprint){
 
 	fam=rep(family,d)
 	dstruct=list(udata=udata,lat=proxyMean,fam=fam)
-	out1=pdhessminb(start,f901fproxynllk,ifixed = rep(F,d),dstruct=dstruct,
-									LB=LB,UB=UB,mxiter=30,eps=1.e-4,iprint=F)
+	out1=pdhessminb(start,f901fproxynllk,ifixed = rep(F,d),
+			dstruct=dstruct,LB=LB,UB=UB,mxiter=30,eps=1.e-4,iprint=F)
 	mlpx1=out1$parmin
 	#new proxy
 	lat_update=latUpdateOnefct(th=mlpx1,udata=udata,nq=25,xl=xl,wl=wl,family=family)
 	proxyNew=uscore(lat_update)
 	dstruct=list(udata=udata,lat=proxyNew,fam=fam)
-	out2=pdhessminb(start,f901fproxynllk,ifixed = rep(F,d),dstruct=dstruct,
-									LB=LB,UB=UB,mxiter=30,eps=1.e-4,iprint=F)
+	out2=pdhessminb(start,f901fproxynllk,ifixed = rep(F,d),
+			dstruct=dstruct, LB=LB,UB=UB,mxiter=30,eps=1.e-4,iprint=F)
 	mlpx2=out2$parmin
 	return(list(mlpx1=mlpx1,mlpx2=mlpx2,proxyMean=proxyMean,proxyNew=proxyNew))
 }
@@ -188,15 +205,15 @@ proxy1fct2<-function(udata,fam,start,LB,UB,xl,wl,iprint){
 	proxyMean=uscore(apply(udata,1,mean)) #mean proxy
 
 	dstruct=list(udata=udata,lat=proxyMean,fam=fam)
-	out1=pdhessminb(start,f901fproxynllk,ifixed = rep(F,d),dstruct=dstruct,
-									LB=LB,UB=UB,mxiter=30,eps=1.e-4,iprint=F)
+	out1=pdhessminb(start,f901fproxynllk,
+			ifixed = rep(F,d),dstruct=dstruct,LB=LB,UB=UB,mxiter=30,eps=1.e-4,iprint=F)
 	mlpx1=out1$parmin
 	#new proxy
 	lat_update=latUpdateOnefct(th=mlpx1,udata=udata,nq=25,xl=xl,wl=wl,family=fam)
 	proxyNew=uscore(lat_update)
 	dstruct=list(udata=udata,lat=proxyNew,fam=fam)
-	out2=pdhessminb(start,f901fproxynllk,ifixed = rep(F,d),dstruct=dstruct,
-									LB=LB,UB=UB,mxiter=30,eps=1.e-4,iprint=F)
+	out2=pdhessminb(start,f901fproxynllk,
+			ifixed = rep(F,d),dstruct=dstruct,LB=LB,UB=UB,mxiter=30,eps=1.e-4,iprint=F)
 	mlpx2=out2$parmin
 	return(list(mlpx1=mlpx1,mlpx2=mlpx2,proxyMean=proxyMean,proxyNew=proxyNew))
 }
