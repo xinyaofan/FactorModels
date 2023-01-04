@@ -18,11 +18,15 @@ f901fproxynllk<-function(param,dstruct,iprint=F){
 	d=ncol(udata)
   #call fortran function
 	#if(!is.loaded("onefact"))  dyn.load("./libs/FactorModels.so")
-	out=.Fortran("onefact",as.double(param),as.integer(d),
-							 as.integer(n),as.double(udata),as.double(lat)
-							 ,as.integer(fam),
-							 nllk=as.double(0.),lgrad=rep(0.0,d),
-							 lhess=matrix(0.0,d,d),PACKAGE = "FactorModels")
+	out=.Fortran("onefact",as.double(param),a
+		     s.integer(d),
+		     as.integer(n),
+		     as.double(udata),
+		     as.double(lat),
+		     as.integer(fam),
+		     nllk=as.double(0.),
+		     lgrad=rep(0.0,d),
+		     lhess=matrix(0.0,d,d),PACKAGE = "FactorModels")
 	return(list("fnval"=out$nllk,"grad"=out$lgrad,"hess"=out$lhess))
 }
 
