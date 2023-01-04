@@ -21,13 +21,16 @@ f90str1proxynllk<-function(param,dstruct,iprfn=FALSE){
 	dvar=ncol(udata)
 	npar=dvar+mgrp
 	#if(!is.loaded("strfrkgum1"))  dyn.load("./mylib.so")
-	out=.Fortran("strfrkgum1",as.integer(npar),as.double(th),as.integer(mgrp),
-							 as.integer(n),as.integer(dvar), as.integer(grsize),
-							 as.double(udata),as.double(lat),as.integer(nq),as.double(wl),
-							 as.double(xl),
-							 nllk=as.double(0.),lgrad=rep(0.0,npar),
-							 lhess=matrix(0.0,npar,npar),
-						   PACKAGE = "FactorModels")
+	out=.Fortran("strfrkgum1",as.integer(npar),
+		     as.double(th),as.integer(mgrp),
+		     as.integer(n),as.integer(dvar), 
+		     as.integer(grsize),
+		     as.double(udata),as.double(lat),
+		     as.integer(nq),as.double(wl),
+		     as.double(xl),
+		     nllk=as.double(0.),lgrad=rep(0.0,npar),
+		     lhess=matrix(0.0,npar,npar),
+		     PACKAGE = "FactorModels")
 	return(list("fnval"=out$nllk,"grad"=out$lgrad,"hess"=out$lhess))
 }
 
@@ -65,22 +68,20 @@ proxyOblique<-function(udata,grsize,fam,start,LB,UB,xl,wl,iprint){
 		proxyMean[,i]=uscore(apply(udata[,((gp[i]+1):gp[i+1])],1,mean))
 	}
 	dstruct=list(udata=udata,grsize=grsize,lat=proxyMean,xl=xl,wl=wl)
-	out1=pdhessminb(param=start,f90str1proxynllk,ifixed=rep(FALSE,npar), dstruct,
-									LB=LB,UB=UB, mxiter=30, eps=5.e-5,iprint=T)
-  mlpx1=out1$parmin
+	out1=pdhessminb(param=start,f90str1proxynllk,ifixed=rep(FALSE,npar), 
+			dstruct,LB=LB,UB=UB, mxiter=30, eps=5.e-5,iprint=T)
+ 	mlpx1=out1$parmin
 
 	for(i in 1:mgrp){
 		th_tem=mlpx1[((gp[i]+1+mgrp):(gp[i+1]+mgrp))]
-		proxyNew[,i]=uscore(latUpdateOnefct(th=th_tem,
-																			  udata=udata[,((gp[i]+1):gp[i+1])],
-													               nq=25,xl=xl,wl=xl,
-																				family=fam))
+		proxyNew[,i]=uscore(latUpdateOnefct(th=th_tem,udata=udata[,((gp[i]+1):gp[i+1])],nq=25,xl=xl,wl=xl,family=fam))
 	}
 
 	dstruct=list(udata=udata,grsize=grsize,lat=proxyNew,xl=xl,wl=wl)
-	out2=pdhessminb(param=mlpx1,f90str1proxynllk,ifixed=rep(FALSE,npar), dstruct,
-									LB=LB, UB=UB, mxiter=30, eps=5.e-5,iprint=T)
-  mlpx2=out2$parmin
+	out2=pdhessminb(param=mlpx1,f90str1proxynllk,
+			ifixed=rep(FALSE,npar), dstruct,
+			LB=LB, UB=UB, mxiter=30, eps=5.e-5,iprint=T)
+  	mlpx2=out2$parmin
 	return(list(mlpx1=mlpx1,mlpx2=mlpx2,proxyMean=proxyMean,proxyNew=proxyNew))
 }
 
