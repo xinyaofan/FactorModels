@@ -135,10 +135,11 @@ proxy1fctweak<-function(udata,fam,start,LB,UB,xl,wl,iprint,ifixed){
 	#new proxy
 	lat_update=latUpdateOnefct(th=mlpx1[1:d],udata=udata,nq=25,xl=xl,wl=wl,fam[1])
 	proxyNew=uscore(lat_update)
-	dstruct=list(data=udata,lat=proxyNew,edg1=c(1:(d-1)),edg2=c(2:d),
-							 fam=fam)
-	out2=pdhessminb(param=start,objfn=f901f1tproxynllk,dstruct=dstruct,ifixed=ifixed,eps=1e-05,
-									 LB=LB,UB=UB,iprint = F)$parmin[!ifixed]
+	dstruct=list(data=udata,lat=proxyNew,edg1=c(1:(d-1)),edg2=c(2:d),fam=fam)
+	
+	out2=pdhessminb(param=start,objfn=f901f1tproxynllk,
+			dstruct=dstruct,ifixed=ifixed,eps=1e-05,
+			LB=LB,UB=UB,iprint = F)$parmin[!ifixed]
 	mlpx2=out2
 	
 	return(list(mlpx1=mlpx1,mlpx2=mlpx2,proxyMean=proxyMean,proxyNew=proxyNew))
